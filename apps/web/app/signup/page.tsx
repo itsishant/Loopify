@@ -10,6 +10,7 @@ export default function Signup() {
 
                 
                 </input>
+                
 
 
                 <input placeholder="password" type="text" className="mt-10 w-full p-3 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500">
