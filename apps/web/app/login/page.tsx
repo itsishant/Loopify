@@ -1,13 +1,10 @@
-"use client"
-
 import Link from "next/link";
-export default function Signup() {
-
-    return (
-        <div className="bg-black  flex justify-center items-center min-h-screen">
+export default function Signin() {
+         return (
+        <div className="bg-black flex justify-center items-center min-h-screen">
             <div className="bg-gray-900 w-lg h-130 p-8 shadow-lg rounded-lg">
                 <div className="text-white flex justify-center items-center font-sans text-5xl tracking-tight font-semibold">
-                    Sign up
+                    Log in
                 </div>
                 <div className="mt-16 ">
                     
@@ -24,15 +21,15 @@ export default function Signup() {
                 <div className="flex justify-center items-center ">
                 <button className="flex justify-center items-center w-full hover:cursor-pointer">
                     <div className="mt-10 w-full flex justify-center  items-center p-3 rounded bg-blue-800 text-white font-semibold hover:bg-blue-700 text-center">
-                        Create Account
+                        Log in
                     </div>
                 </button></div>
 
                 <div className="flex justify-center items-center mt-10">
                     <span className="text-neutral-400">
-                        Already have an account ?
-                        <Link href="/login">
-                        <span className="text-blue-300 cursor-pointer hover:text-blue-400 "> Log in</span>
+                        Don't have an account yet ? 
+                        <Link href="/signup">
+                        <span className="text-blue-300 cursor-pointer hover:text-blue-400 "> Sign up</span>
                         </Link>
                     </span>
                 </div>

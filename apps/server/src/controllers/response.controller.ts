@@ -1,4 +1,4 @@
-import { response, type Request, type Response } from 'express';
+import { type Request, type Response } from 'express';
 import ai from '../integrations/geminiClient.js';
 const createPromptResponse = async (req: Request, res: Response) => {
     try {
