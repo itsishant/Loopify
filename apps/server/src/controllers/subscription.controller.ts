@@ -11,8 +11,7 @@ const createSubscription = async (
       appName,
       category,
       planType,
-      amount,
-      
+      amount,      
       currency,
       paymentMethod,
       autoRenew,
@@ -25,7 +24,8 @@ const createSubscription = async (
         return res.status(400).json({
             success: false,
             message: "Invalid input"
-        })
+        
+          })
     }
 
     const createdData = await createSubscriptionData(req);
