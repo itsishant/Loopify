@@ -158,6 +158,7 @@ const deleteSubscription = async (
   res: Response,
   
 ) => {
+  
   try {
     const id = req.params.id;
 
