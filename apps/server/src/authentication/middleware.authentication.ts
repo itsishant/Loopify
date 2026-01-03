@@ -13,6 +13,7 @@ const middlewareAuthentication = (
   req: Request,
   res: Response,
   next: NextFunction,
+  
 ) => {
   try {
     const authHeader = req.headers.authorization;
