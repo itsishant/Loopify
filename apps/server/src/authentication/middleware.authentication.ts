@@ -10,7 +10,6 @@ if (!JWT_SECRET) {
   console.log("JWT SECRET is not defined");
 }
 const middlewareAuthentication = (
-  
   req: Request,
   res: Response,
   next: NextFunction,
