@@ -12,6 +12,7 @@ const createPromptResponse = async (req: Request, res: Response) => {
     }
 
     // llm call =>
+    
     const result = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: prompt,
