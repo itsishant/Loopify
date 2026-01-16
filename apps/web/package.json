@@ -12,9 +12,12 @@
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
+    "motion": "^12.26.2",
     "next": "^16.0.1",
     "react": "^19.2.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "react-gridlines": "^1.1.7",
+    "react-motion": "^0.5.2"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.4.6",
