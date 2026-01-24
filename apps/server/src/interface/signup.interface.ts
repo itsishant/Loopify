@@ -3,4 +3,5 @@ export interface ISignupData {
   password: string;
   userId?: string;
   id?: string;
+  googleId? : string | null;
 }

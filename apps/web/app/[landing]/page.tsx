@@ -155,3 +155,5 @@ export const LandingPage = () => {
     </motion.div>
   );
 };
+
+export default LandingPage;

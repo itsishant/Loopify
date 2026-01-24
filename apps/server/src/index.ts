@@ -4,10 +4,16 @@ import dotenv from "dotenv";
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+    optionsSuccessStatus: 200,
+  }),
+);
 dotenv.config();
 
-const PORT = 51733;
+const PORT = process.env.PORT || 3000;
 
 import { connectToDatabase } from "./database/connection.js";
 connectToDatabase();
@@ -29,6 +35,10 @@ app.use("/api/v1/login", loginRouter);
 import subscriptionRouter from "./routes/subscription.routes.js";
 app.use("/api/v1/subscription", subscriptionRouter);
 
-app.listen(51733, () => {
+// Google Authentication Routes
+import googelAuthRouter from "./routes/authentication/google.authentication.routes.js";
+app.use("/api/v1/auth", googelAuthRouter);
+
+app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
