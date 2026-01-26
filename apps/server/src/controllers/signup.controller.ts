@@ -8,6 +8,8 @@ import { checkUserExist } from "../utils/signup/userEmilCheck.utils.js";
 import { success } from "zod";
 import { getInfo } from "../utils/signup/getUsers.utils.js";
 import { deleteUserFunction } from "../utils/signup/deleteUser.utils.js";
+import nodemailer from "nodemailer";
+import { mailer } from "../utils/services/mailer.js";
 const createUser = async (req: Request<{}, {}, ISignupData>, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -32,6 +34,7 @@ const createUser = async (req: Request<{}, {}, ISignupData>, res: Response) => {
       });
     }
 
+    mailer(req.body.email);
     const newUser = await userCreate(req);
 
     if (!newUser) {

@@ -2,12 +2,8 @@ import type { Request, Response } from "express";
 import { Users } from "../../models/signupModel.js";
 import { jwtSign } from "../../utils/token/jwtSign.utils.js";
 
-// This endpoint receives Google user data from NextAuth.js
 const googleSignIn = async (req: Request, res: Response) => {
   try {
-    console.log("========== GOOGLE SIGN-IN FROM NEXTAUTH START ==========");
-    console.log("📨 Request body:", JSON.stringify(req.body, null, 2));
-
     const { email, googleId, name } = req.body;
 
     if (!email || !googleId) {

@@ -1,24 +1,15 @@
 "use client";
 
-import axios from "axios";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { createUser } from "../api/post/[...signupApi]/signup.api";
 
 export default function Signup() {
   const searchParams = useSearchParams();
-  const router = useRouter();
-
-  useEffect(() => {
-    const token = searchParams.get("token");
-    const success = searchParams.get("success");
-
-    if (token && success === "true") {
-      localStorage.setItem("authToken", token);
-      router.push("/");
-    }
-  }, [searchParams, router]);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleGoogleSignIn = async () => {
     try {
@@ -37,18 +28,28 @@ export default function Signup() {
         <div className="mt-16 ">
           <input
             placeholder="email"
+            onChange={(e) => { 
+              setEmail(e.target.value);
+            }}
             type="text"
             className="mt-10 w-full p-3 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
           ></input>
 
           <input
             placeholder="password"
+             onChange={(e) => { 
+              setPassword(e.target.value);
+            }}
             type="password"
             className="mt-10 w-full p-3 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
           ></input>
         </div>
         <div className="flex justify-center items-center ">
-          <button className="flex justify-center items-center w-full hover:cursor-pointer">
+          <button
+          onClick={() => {
+            createUser(email, password)
+          }}
+          className="flex justify-center items-center w-full hover:cursor-pointer">
             <div className="mt-10 w-full flex justify-center  items-center p-3 rounded bg-blue-800 text-white font-semibold hover:bg-blue-700 text-center">
               Create Account
             </div>

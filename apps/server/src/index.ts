@@ -28,7 +28,6 @@ app.use("/api/v1/signup", signupRouter);
 
 // Login Route
 import loginRouter from "./routes/login.routes.js";
-console.log("Subscription router loaded:", subscriptionRouter);
 app.use("/api/v1/login", loginRouter);
 
 // Subscription Routes

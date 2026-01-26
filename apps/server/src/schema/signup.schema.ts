@@ -8,8 +8,7 @@ const signupSchema = new mongoose.Schema({
 
   password: {
     type: String,
-    required: false,
-    default: null,
+    required: true,
   },
 
   userId: {
@@ -17,7 +16,7 @@ const signupSchema = new mongoose.Schema({
     ref: "Users",
   },
 
-  googleId: {
+  otp: {
     type: String,
     required: false,
     default: null,

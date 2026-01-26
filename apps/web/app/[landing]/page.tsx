@@ -21,15 +21,6 @@ export const LandingPage = () => {
       }}
     >
       <div className="w-full flex flex-col items-center">
-        {/* <motion.div
-          initial={{ opacity: 0, x: 0 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="flex justify-center ite p-8 bg-clip-text text-transparent bg-gradient-to-r from-neutral-400 to-neutral-400 md:text-4xl lg:text-7xl font-sans font-bold tracking-tight leading-[1.2] pb-6"
-        >
-          {" "}
-          <span>LOOPIFY</span>
-        </motion.div> */}
         <div
           className="relative h-16 min-w-6xl border border-gray-600 bg-gray/30 backdrop-blur-sm flex items-center mt-7.5 rounded-full py-2 pl-0 pr-8"
           style={{ fontFamily: "Poppins" }}
