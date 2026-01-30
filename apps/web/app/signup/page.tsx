@@ -10,6 +10,7 @@ export default function Signup() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const route = useRouter();
 
   const handleGoogleSignIn = async () => {
     try {
@@ -28,7 +29,7 @@ export default function Signup() {
         <div className="mt-16 ">
           <input
             placeholder="email"
-            onChange={(e) => { 
+            onChange={(e) => {
               setEmail(e.target.value);
             }}
             type="text"
@@ -37,7 +38,7 @@ export default function Signup() {
 
           <input
             placeholder="password"
-             onChange={(e) => { 
+            onChange={(e) => {
               setPassword(e.target.value);
             }}
             type="password"
@@ -46,10 +47,23 @@ export default function Signup() {
         </div>
         <div className="flex justify-center items-center ">
           <button
-          onClick={() => {
-            createUser(email, password)
-          }}
-          className="flex justify-center items-center w-full hover:cursor-pointer">
+            onClick={async () => {
+              const result = await createUser(email, password);
+              if (result?.success) {
+                // Store the actual userId (not token) for OTP verification
+                localStorage.setItem(
+                  "userId",
+                  result.data?._id || result.data?.id,
+                );
+                localStorage.setItem("token", result.token);
+                localStorage.setItem("email", email);
+                route.push("/signup/otp");
+              } else {
+                alert(result?.message || "Failed to create account");
+              }
+            }}
+            className="flex justify-center items-center w-full hover:cursor-pointer"
+          >
             <div className="mt-10 w-full flex justify-center  items-center p-3 rounded bg-blue-800 text-white font-semibold hover:bg-blue-700 text-center">
               Create Account
             </div>

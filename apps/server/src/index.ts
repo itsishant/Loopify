@@ -38,6 +38,9 @@ app.use("/api/v1/subscription", subscriptionRouter);
 import googelAuthRouter from "./routes/authentication/google.authentication.routes.js";
 app.use("/api/v1/auth", googelAuthRouter);
 
+import otpVerificationRouter from "./routes/authentication/otp-verification.routes.js";
+app.use("/api/v1/auth", otpVerificationRouter);
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

@@ -10,9 +10,10 @@ import { getInfo } from "../utils/signup/getUsers.utils.js";
 import { deleteUserFunction } from "../utils/signup/deleteUser.utils.js";
 import nodemailer from "nodemailer";
 import { mailer } from "../utils/services/mailer.js";
+import { generateOTP } from "../utils/otp/otpGenerator.utils.js";
 const createUser = async (req: Request<{}, {}, ISignupData>, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, otp } = req.body;
     const body = signupZod.safeParse(req.body);
 
     if (!body.success || !email || !password) {
@@ -34,7 +35,10 @@ const createUser = async (req: Request<{}, {}, ISignupData>, res: Response) => {
       });
     }
 
-    mailer(req.body.email);
+    const genrotp = generateOTP(4);
+
+    await mailer(req.body.email, genrotp);
+    req.body.otp = genrotp;
     const newUser = await userCreate(req);
 
     if (!newUser) {
@@ -57,8 +61,9 @@ const createUser = async (req: Request<{}, {}, ISignupData>, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      messsage: "User created successfully",
+      message: "User created successfully",
       token: jwtToken,
+      data: newUser
     });
   } catch (error) {
     console.log("Error while creating user:", error);
