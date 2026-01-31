@@ -5,10 +5,8 @@ import { userCreate } from "../utils/signup/userCreate.utils.js";
 import { jwtSign } from "../utils/token/jwtSign.utils.js";
 import { passwordHash } from "../utils/password/bcrypt.password.utils.js";
 import { checkUserExist } from "../utils/signup/userEmilCheck.utils.js";
-import { success } from "zod";
 import { getInfo } from "../utils/signup/getUsers.utils.js";
 import { deleteUserFunction } from "../utils/signup/deleteUser.utils.js";
-import nodemailer from "nodemailer";
 import { mailer } from "../utils/services/mailer.js";
 import { generateOTP } from "../utils/otp/otpGenerator.utils.js";
 const createUser = async (req: Request<{}, {}, ISignupData>, res: Response) => {
@@ -63,7 +61,7 @@ const createUser = async (req: Request<{}, {}, ISignupData>, res: Response) => {
       success: true,
       message: "User created successfully",
       token: jwtToken,
-      data: newUser
+      data: newUser,
     });
   } catch (error) {
     console.log("Error while creating user:", error);

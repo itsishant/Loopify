@@ -4,7 +4,6 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const verifyOTP = async (userId: string, otp: string) => {
   try {
-
     const response = await axios.post(`${API_URL}/auth/verify-otp`, {
       userId,
       otp,

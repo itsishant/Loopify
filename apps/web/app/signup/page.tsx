@@ -50,7 +50,6 @@ export default function Signup() {
             onClick={async () => {
               const result = await createUser(email, password);
               if (result?.success) {
-                // Store the actual userId (not token) for OTP verification
                 localStorage.setItem(
                   "userId",
                   result.data?._id || result.data?.id,

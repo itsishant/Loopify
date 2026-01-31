@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { GoArrowRight } from "react-icons/go";
 import { MdAttachMoney } from "react-icons/md";
 import { CardLanding } from "./[...landingCards]/landingCard.landing";
+import { SubscriptionsLanding } from "./[...landingSubscription]/landingSubscripton.landing";
 export const LandingPage = () => {
   const route = useRouter();
 
@@ -142,6 +143,7 @@ export const LandingPage = () => {
         </div>
       </div>
       <CardLanding />
+      <SubscriptionsLanding />
     </motion.div>
   );
 };
