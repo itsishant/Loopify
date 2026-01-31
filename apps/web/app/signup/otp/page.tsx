@@ -71,11 +71,16 @@ export default function Otp() {
   return (
     <div className="bg-black flex justify-center items-center min-h-screen">
       <div className="bg-gray-900 p-8 shadow-lg rounded-lg">
-        <h1 className="text-neutral-200 text-center text-5xl font-medium">
-          OTP Verification
-        </h1>
+        <div className="flex flex-col justify-center items-center space-y-4">
+          <h1 className="text-neutral-200 text-center text-5xl font-medium">
+            OTP Verification
+          </h1>
 
-        <div className="flex gap-4 justify-center mt-20">
+          <p className="font-poppins text-sm font-medium text-neutral-400">
+            4-digit code sent to your email address
+          </p>
+        </div>
+        <div className="flex gap-4 justify-center mt-14 mb-4">
           {otp.map((_, index) => (
             <input
               key={index}
@@ -108,7 +113,7 @@ export default function Otp() {
         <button
           onClick={handleVerify}
           disabled={loading}
-          className="mt-8 w-full p-3 rounded bg-blue-800 text-white font-semibold hover:bg-blue-700 disabled:opacity-50"
+          className="mt-8 w-full cursor-pointer p-3 rounded bg-blue-800 text-white font-semibold hover:bg-blue-700 disabled:opacity-50"
         >
           {loading ? "Verifying..." : "Verify"}
         </button>

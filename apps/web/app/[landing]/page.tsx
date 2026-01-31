@@ -6,21 +6,18 @@ import "@fontsource/poppins/400-italic.css";
 import { useRouter } from "next/navigation";
 import { GoArrowRight } from "react-icons/go";
 import { MdAttachMoney } from "react-icons/md";
+import { CardLanding } from "./[...landingCards]/landingCard.landing";
 export const LandingPage = () => {
   const route = useRouter();
 
   return (
     <motion.div
-      className="flex justify-center min-h-screen bg-gray-950"
+      className="flex flex-col justify-center bg-black"
       style={{
-        backgroundImage: `
-            linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent),
-            linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent)
-          `,
-        backgroundSize: "120px 120px",
+        backgroundSize: "90px 90px",
       }}
     >
-      <div className="w-full flex flex-col items-center">
+      <div className="w-full flex flex-col items-center min-h-screen">
         <div
           className="relative h-16 min-w-6xl border border-gray-600 bg-gray/30 backdrop-blur-sm flex items-center mt-7.5 rounded-full py-2 pl-0 pr-8"
           style={{ fontFamily: "Poppins" }}
@@ -91,15 +88,15 @@ export const LandingPage = () => {
           </p>
         </div>
         <div
-          className="text-xl mt-7 font-sans font-light text-gray-400"
+          className="text-xl mt-7 font-sans font-light text-gray-500"
           style={{
             fontFamily: "Poppins",
           }}
         >
-          <p className="text-center font-extralight text-gray-400">
+          <p className="text-center font-extralight text-gray-500">
             Loopify is a smart platform that helps you
           </p>
-          <p className="text-xl font-light text-gray-400">
+          <p className="text-xl font-light text-gray-500">
             manage all your subscriptions from one-place.
           </p>
         </div>
@@ -120,6 +117,7 @@ export const LandingPage = () => {
                   x: 0,
                 },
               }}
+              onClick={() => route.push("/signup")}
               className="text-xl text-neutral-100 hover:cursor-pointer"
             >
               {" "}
@@ -143,6 +141,7 @@ export const LandingPage = () => {
           </div>
         </div>
       </div>
+      <CardLanding />
     </motion.div>
   );
 };
