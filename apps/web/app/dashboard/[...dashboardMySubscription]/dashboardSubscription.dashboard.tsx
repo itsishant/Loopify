@@ -378,84 +378,146 @@ export const DashboardSubscription = () => {
         )}
 
         {subscriptions.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-gray-500 text-sm">
-              No subscriptions yet. Add one to get started.
+          <div className="flex flex-col items-center justify-center py-32">
+            <div className="w-20 h-20 rounded-2xl bg-neutral-900/50 border border-neutral-800 flex items-center justify-center mb-6">
+              <svg
+                className="w-10 h-10 text-neutral-700"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                />
+              </svg>
+            </div>
+            <h3 className="text-neutral-300 text-lg font-medium mb-2">
+              No active subscriptions
+            </h3>
+            <p className="text-neutral-600 text-sm mb-8 max-w-sm text-center">
+              Track and manage all your subscriptions in one place
             </p>
+            <button
+              onClick={() => setShowForm(true)}
+              className="px-5 py-2.5 bg-white text-black text-sm font-medium rounded-lg hover:bg-neutral-100 transition-all duration-200"
+            >
+              Add Subscription
+            </button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
             {subscriptions.map((sub) => (
               <div
                 key={sub.id}
-                className={`bg-neutral-900 border border-neutral-800 rounded-lg p-6 hover:border-neutral-700 transition-colors duration-200 ${getStatusColor(sub.status)}`}
+                className="relative bg-neutral-900/40 backdrop-blur-sm border border-neutral-800/50 rounded-xl p-6 hover:border-neutral-700 transition-all duration-300 group"
               >
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
-                  <div>
-                    <p className="text-gray-500 text-xs uppercase font-medium mb-2">
-                      App
-                    </p>
-                    <p className="text-white font-medium">
-                      {sub.subscriptionDetails.appName}
-                    </p>
-                    <p className="text-gray-400 text-sm mt-1">
-                      {sub.subscriptionDetails.category}
-                    </p>
+                {/* Header */}
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 rounded-lg bg-neutral-800/80 border border-neutral-700/50 flex items-center justify-center">
+                      <span className="text-neutral-300 font-semibold text-base">
+                        {sub.subscriptionDetails.appName
+                          .charAt(0)
+                          .toUpperCase()}
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="text-neutral-200 text-base font-semibold leading-tight">
+                        {sub.subscriptionDetails.appName}
+                      </h3>
+                      <p className="text-neutral-500 text-xs mt-0.5">
+                        {sub.subscriptionDetails.category}
+                      </p>
+                    </div>
                   </div>
+                  <span
+                    className={`px-2.5 py-1 rounded-md text-xs font-medium ${
+                      sub.status === "Active"
+                        ? "bg-emerald-500/10 text-emerald-400"
+                        : sub.status === "Inactive"
+                          ? "bg-neutral-700/50 text-neutral-400"
+                          : sub.status === "Paused"
+                            ? "bg-amber-500/10 text-amber-400"
+                            : "bg-rose-500/10 text-rose-400"
+                    }`}
+                  >
+                    {sub.status}
+                  </span>
+                </div>
 
-                  <div>
-                    <p className="text-gray-500 text-xs uppercase font-medium mb-2">
-                      Billing
-                    </p>
-                    <p className="text-white font-medium">
-                      {sub.billingDetails.currency} {sub.billingDetails.amount}
-                    </p>
-                    <p className="text-gray-400 text-sm mt-1">
-                      {sub.subscriptionDetails.planType}
-                    </p>
+                {/* Pricing */}
+                <div className="mb-6">
+                  <div className="flex items-baseline gap-1 mb-1">
+                    <span className="text-neutral-200 text-3xl font-bold tracking-tight">
+                      {sub.billingDetails.currency === "USD"
+                        ? "$"
+                        : sub.billingDetails.currency === "EUR"
+                          ? "€"
+                          : sub.billingDetails.currency === "GBP"
+                            ? "£"
+                            : "₹"}
+                      {sub.billingDetails.amount}
+                    </span>
+                    <span className="text-neutral-500 text-sm font-medium">
+                      / {sub.subscriptionDetails.planType.toLowerCase()}
+                    </span>
                   </div>
+                  {sub.billingDetails.autoRenew && (
+                    <div className="flex items-center gap-1.5 text-neutral-500 text-xs">
+                      <svg
+                        className="w-3.5 h-3.5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span>Auto-renews</span>
+                    </div>
+                  )}
+                </div>
 
-                  <div>
-                    <p className="text-gray-500 text-xs uppercase font-medium mb-2">
-                      Payment
-                    </p>
-                    <p className="text-white font-medium">
+                {/* Details */}
+                <div className="space-y-3 mb-6 pb-6 border-b border-neutral-800/50">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-neutral-500">Payment</span>
+                    <span className="text-neutral-300 font-medium">
                       {sub.billingDetails.paymentMethod}
-                    </p>
-                    <p className="text-gray-400 text-sm mt-1">
-                      {sub.billingDetails.autoRenew
-                        ? "Auto Renewal"
-                        : "Manual Renewal"}
-                    </p>
+                    </span>
                   </div>
-
-                  <div>
-                    <p className="text-gray-500 text-xs uppercase font-medium mb-2">
-                      Next Billing
-                    </p>
-                    <p className="text-white font-medium">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-neutral-500">Next billing</span>
+                    <span className="text-neutral-300 font-medium">
                       {new Date(
                         sub.datesDetails.nextBillingDate,
-                      ).toLocaleDateString()}
-                    </p>
-                    <p className="text-gray-400 text-sm mt-1">
-                      {sub.remindaerDaysBefore} days before
-                    </p>
+                      ).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </span>
                   </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-neutral-500">Reminder</span>
+                    <span className="text-neutral-300 font-medium">
+                      {sub.remindaerDaysBefore}d before
+                    </span>
+                  </div>
+                </div>
 
-                  <div className="flex flex-col justify-between items-end">
-                    <div className="text-white font-medium text-sm">
-                      {sub.status}
-                    </div>
-                    <div className="flex gap-2 mt-4">
-                      <button className="px-4 py-2 bg-neutral-800 text-white text-sm font-medium rounded hover:bg-neutral-700 transition-colors duration-200">
-                        Edit
-                      </button>
-                      <button className="px-4 py-2 bg-neutral-800 text-white text-sm font-medium rounded hover:bg-neutral-700 transition-colors duration-200">
-                        Delete
-                      </button>
-                    </div>
-                  </div>
+                {/* Actions */}
+                <div className="flex gap-2">
+                  <button className="flex-1 px-3 py-2 bg-neutral-800/60 hover:bg-neutral-800 text-neutral-300 text-xs font-medium rounded-lg transition-colors duration-200">
+                    Edit
+                  </button>
+                  <button className="px-3 py-2 bg-neutral-800/60 hover:bg-rose-500/10 text-neutral-400 hover:text-rose-400 text-xs font-medium rounded-lg transition-all duration-200">
+                    Delete
+                  </button>
                 </div>
               </div>
             ))}

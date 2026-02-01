@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import "@fontsource/poppins/400.css";
+import { TbLogout } from "react-icons/tb";
 import "@fontsource/poppins/400-italic.css";
 import { GoArrowRight } from "react-icons/go";
 import { DashboardSubscription } from "./[...dashboardMySubscription]/dashboardSubscription.dashboard";
@@ -39,17 +40,17 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <div className="ml-auto">
+        <div className="absolute right-4">
           <motion.p
             whileHover="hover"
-            className="text-gray-400 hover:text-red-600 font-semibold flex items-center bg-gray/40 backdrop-blur-md px-5 py-3 rounded-full cursor-pointer"
+            className="text-gray-400 hover:text-red-800 font-semibold flex items-center bg-gray/40 backdrop-blur-md px-5 py-3 rounded-full cursor-pointer"
           >
             <motion.span
               variants={{
                 hover: { x: 0 },
               }}
             >
-              Logout
+              <TbLogout size={25} className="text-rose-700"/>
             </motion.span>
 
             <motion.span

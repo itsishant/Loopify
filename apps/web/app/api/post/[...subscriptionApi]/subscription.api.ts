@@ -23,8 +23,6 @@ export const createSubscription = (
       throw new Error("Authentication token not found. Please log in again.");
     }
 
-    console.log("Token being sent:", token);
-
     const response = axios.post(
       `${API_URL}/subscription/create-subscription`,
       {
