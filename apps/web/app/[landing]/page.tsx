@@ -7,7 +7,9 @@ import { useRouter } from "next/navigation";
 import { GoArrowRight } from "react-icons/go";
 import { MdAttachMoney } from "react-icons/md";
 import { CardLanding } from "./[...landingCards]/landingCard.landing";
-import { SubscriptionsLanding } from "./[...landingSubscription]/landingSubscripton.landing";
+import { TrustedPartner } from "./[...landingSubscription]/landingPartners.landing";
+import { LandingSteps } from "./[...landingSteps]/landingSetps.landing";
+import { LandingPrices } from "./[...landingPrice]/landingPrice.landing";
 export const LandingPage = () => {
   const route = useRouter();
 
@@ -32,10 +34,16 @@ export const LandingPage = () => {
           </div>
 
           <div className="absolute left-1/2 -translate-x-1/2 flex space-x-12 text-lg">
-            <p className="text-gray-400 cursor-pointer hover:text-gray-200">
+            <p
+              onClick={() => route.push("/")}
+              className="text-gray-400 cursor-pointer hover:text-gray-200"
+            >
               Home
             </p>
-            <p className="text-gray-400 cursor-pointer hover:text-gray-200">
+            <p
+              onClick={() => window.scrollTo(2, 500)}
+              className="text-gray-400 cursor-pointer hover:text-gray-200"
+            >
               Explore
             </p>
             <p className="text-gray-400 cursor-pointer hover:text-gray-200">
@@ -143,7 +151,9 @@ export const LandingPage = () => {
         </div>
       </div>
       <CardLanding />
-      <SubscriptionsLanding />
+      <TrustedPartner />
+      <LandingSteps />
+      <LandingPrices />
     </motion.div>
   );
 };
