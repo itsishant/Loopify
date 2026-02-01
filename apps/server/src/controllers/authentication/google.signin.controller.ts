@@ -15,11 +15,8 @@ const googleSignIn = async (req: Request, res: Response) => {
       });
     }
 
-    console.log(
-      `✅ Received Google data - Email: ${email}, GoogleId: ${googleId}, Name: ${name}`,
-    );
+    console.log(`${email}, GoogleId: ${googleId}, Name: ${name}`);
 
-    // Find or create user
     console.log("🔍 Searching for user with googleId:", googleId);
     let user = await Users.findOne({ googleId });
 

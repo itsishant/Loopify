@@ -14,6 +14,7 @@ const loginUser = async (req: Request, res: Response) => {
         message: "Invaild request data",
       });
     }
+    
     const existingUser = await checkUser(email);
     if (!existingUser) {
       return res.status(404).json({
@@ -48,6 +49,10 @@ const loginUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.log("Error in login user:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
   }
 };
 

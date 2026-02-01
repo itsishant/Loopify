@@ -15,14 +15,14 @@ export const LandingPage = () => {
 
   return (
     <motion.div
-      className="flex flex-col justify-center bg-black"
+      className="flex flex-col justify-center font-poppins bg-black"
       style={{
         backgroundSize: "90px 90px",
       }}
     >
-      <div className="w-full flex flex-col items-center min-h-screen">
+      <div className="w-full font-poppins flex flex-col items-center min-h-screen">
         <div
-          className="relative h-16 min-w-6xl border border-gray-600 bg-gray/30 backdrop-blur-sm flex items-center mt-7.5 rounded-full py-2 pl-0 pr-8"
+          className="relative h-16 min-w-6xl border font-poppins border-gray-600 bg-gray/30 backdrop-blur-sm flex items-center mt-7.5 rounded-full py-2 pl-0 pr-8"
           style={{ fontFamily: "Poppins" }}
         >
           <div className="ml-2">
@@ -33,7 +33,7 @@ export const LandingPage = () => {
             />
           </div>
 
-          <div className="absolute left-1/2 -translate-x-1/2 flex space-x-12 text-lg">
+          <div className="absolute left-1/2 -translate-x-1/2 flex font-poppins space-x-12 text-lg">
             <p
               onClick={() => route.push("/")}
               className="text-gray-400 cursor-pointer hover:text-gray-200"

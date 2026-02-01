@@ -16,6 +16,8 @@ const mailer = async (toMail: string, otp: string) => {
         user: user,
         pass: pass,
       },
+      connectionTimeout: 5000, // 5 second timeout
+      socketTimeout: 5000,
     });
 
     const info = await transporter.sendMail({
