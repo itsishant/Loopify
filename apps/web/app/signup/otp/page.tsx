@@ -56,7 +56,7 @@ export default function Otp() {
       console.log("Verification Result:", result);
 
       if (result?.success) {
-        alert("OTP verified successfully!");
+        router.push("/dashboard")
       } else {
         setMessage(result?.message || "Invalid OTP");
       }

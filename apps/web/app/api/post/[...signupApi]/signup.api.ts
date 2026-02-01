@@ -11,6 +11,8 @@ export const createUser = async (email: string, password: string) => {
     });
 
     localStorage.setItem("userId", response?.data?.data?._id);
+    localStorage.setItem("token", response?.data?.data?.token);
+    console.log("response data", response);
 
     return response.data;
   } catch (error) {

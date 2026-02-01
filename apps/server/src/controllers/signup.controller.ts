@@ -48,9 +48,9 @@ const createUser = async (req: Request<{}, {}, ISignupData>, res: Response) => {
 
     const userId = newUser._id.toString();
 
-    const jwtToken = jwtSign(userId);
+    const newToken = await jwtSign(userId);
 
-    if (!jwtToken) {
+    if (!newToken || typeof newToken !== "string" || newToken.trim() === "") {
       return res.status(401).json({
         success: false,
         message: "JWT Token generation failed",
@@ -60,7 +60,7 @@ const createUser = async (req: Request<{}, {}, ISignupData>, res: Response) => {
     return res.status(200).json({
       success: true,
       message: "User created successfully",
-      token: jwtToken,
+      token: newToken,
       data: newUser,
     });
   } catch (error) {
@@ -68,6 +68,7 @@ const createUser = async (req: Request<{}, {}, ISignupData>, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
+      error: error instanceof Error ? error.message : String(error),
     });
   }
 };

@@ -45,6 +45,13 @@ export const DashboardSubscription = () => {
   };
 
   const handleAddSubscription = async () => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+
+    if (!token && !userId) {
+      return setError("User not authenticated. Please log in.");
+    }
+
     if (
       formData.subscriptionDetails.appName &&
       formData.billingDetails.amount
@@ -56,13 +63,13 @@ export const DashboardSubscription = () => {
           formData.subscriptionDetails.appName,
           formData.subscriptionDetails.category,
           formData.subscriptionDetails.planType,
-          Number(formData.billingDetails.amount),
+          formData.billingDetails.amount,
           formData.billingDetails.currency,
           formData.billingDetails.paymentMethod,
           formData.billingDetails.autoRenew,
           formData.datesDetails.startDate,
           formData.datesDetails.nextBillingDate,
-          Number(formData.remindaerDaysBefore),
+          formData.remindaerDaysBefore,
         );
 
         if (!response || !response.data) {
@@ -193,7 +200,7 @@ export const DashboardSubscription = () => {
                   className="w-full bg-neutral-800 border border-neutral-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-white transition-colors text-sm"
                 >
                   <option value="">Select plan</option>
-                  <option value="Monthly">Monthly</option>
+                  <option value="Monthy">Monthly</option>
                   <option value="Yearly">Yearly</option>
                   <option value="Free">Free</option>
                   <option value="Trial">Trial</option>

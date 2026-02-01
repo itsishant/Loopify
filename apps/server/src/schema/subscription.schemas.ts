@@ -20,14 +20,14 @@ const subscriptionSchema = new mongoose.Schema({
 
     planType: {
       type: String,
-      enum: ["Monthy", "Yearly", "Free", "Trial"],
+      enum: ["Monthly", "Yearly", "Free", "Trial"],
       required: true,
     },
   },
 
   billingDetails: {
     amount: {
-      type: String,
+      type: Number,
       required: true,
     },
 
@@ -44,7 +44,7 @@ const subscriptionSchema = new mongoose.Schema({
 
     autoRenew: {
       type: Boolean,
-      rquired: true,
+      required: true,
     },
   },
 
@@ -61,9 +61,9 @@ const subscriptionSchema = new mongoose.Schema({
   },
 
   remindaerDaysBefore: {
-    type: String,
-    enum: ["1", "3", "7", "14", "30"],
-    rrequired: true,
+    type: Number,
+    enum: [1, 3, 7, 14, 30],
+    required: true,
   },
 
   status: {

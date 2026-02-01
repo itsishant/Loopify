@@ -54,7 +54,7 @@ export default function Signup() {
                   "userId",
                   result.data?._id || result.data?.id,
                 );
-                localStorage.setItem("token", result.token);
+                localStorage.setItem("token", result.token || "");
                 localStorage.setItem("email", email);
                 route.push("/signup/otp");
               } else {

@@ -13,7 +13,7 @@ app.use(
 );
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;  
 
 import { connectToDatabase } from "./database/connection.js";
 connectToDatabase();
