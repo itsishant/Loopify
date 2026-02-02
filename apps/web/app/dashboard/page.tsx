@@ -2,78 +2,91 @@
 
 import { motion } from "motion/react";
 import "@fontsource/poppins/400.css";
-import { TbLogout } from "react-icons/tb";
+import {
+  TbLogout,
+  TbSearch,
+  TbBell,
+  TbFilter,
+  TbLayoutGrid,
+  TbList,
+} from "react-icons/tb";
 import "@fontsource/poppins/400-italic.css";
-import { GoArrowRight } from "react-icons/go";
 import { DashboardSubscription } from "./[...dashboardMySubscription]/dashboardSubscription.dashboard";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function DashboardPage() {
   const route = useRouter();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [viewMode, setViewMode] = useState("grid");
+
+  const navItems = [
+    "Subscriptions",
+    "Payments",
+    "Analytics",
+    "Settings",
+    "Support",
+  ];
+
   return (
-    <div className="flex flex-col justify-center items-center">
-      <div
-        className="relative h-16 min-w-6xl border border-gray-600 bg-gray/30 backdrop-blur-sm flex items-center mt-7.5 rounded-full py-2 pl-0 pr-8"
-        style={{ fontFamily: "Poppins" }}
-      >
-        <div className="ml-2">
-          <img
-            src="logo.png"
-            className="size-13.5 rounded-full object-cover"
-            alt=""
-          />
-        </div>
+    <div className="min-h-screen bg-black">
+      <header className="sticky top-0 z-50 border-b border-neutral-800 bg-black/95 backdrop-blur-md">
+        <div className="px-6 py-4">
+          <div className="flex items-center justify-between gap-8">
+            <div className="flex items-center gap-3 min-w-fit">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
+                <span className="text-black font-bold text-sm">S</span>
+              </div>
+              <div>
+                <h1 className="text-sm font-semibold text-white">
+                  My Subscriptions
+                </h1>
+                <p className="text-xs text-neutral-500">Personal</p>
+              </div>
+            </div>
 
-        <div className="absolute left-1/2 -translate-x-1/2 flex space-x-12 text-lg">
-          <p className="text-gray-400 cursor-pointer hover:text-gray-200">
-            My Subscriptions
-          </p>
-          <p
-            onClick={() => window.scrollTo(2, 500)}
-            className="text-gray-400 cursor-pointer hover:text-gray-200"
-          >
-            Explore
-          </p>
-          <p className="text-gray-400 cursor-pointer hover:text-gray-200">
-            Pricing
-          </p>
-          <p className="text-gray-400 cursor-pointer hover:text-gray-200">
-            Community
-          </p>
-        </div>
+            <nav className="hidden lg:flex items-center gap-1">
+              {navItems.map((item) => (
+                <button
+                  key={item}
+                  className="px-3 py-2 text-sm text-neutral-400 hover:text-neutral-300 hover:bg-neutral-900/50 rounded-md transition-colors duration-200"
+                >
+                  {item}
+                </button>
+              ))}
+            </nav>
 
-        <div className="absolute right-4">
-          <motion.p
-            whileHover="hover"
-            className="text-gray-400 hover:text-red-800 font-semibold flex items-center bg-gray/40 backdrop-blur-md px-5 py-3 rounded-full cursor-pointer"
-          >
-            <motion.span
-              variants={{
-                hover: { x: 0 },
-              }}
-            >
-              <TbLogout
+            <div className="flex items-center gap-3 ml-auto">
+             
+
+              <button className="p-2 text-neutral-400 hover:text-neutral-300 hover:bg-neutral-900/50 rounded-lg transition-colors duration-200 relative">
+                <TbBell className="w-5 h-5" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+              </button>
+
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-semibold text-sm cursor-pointer hover:shadow-lg transition-shadow">
+                {(localStorage.getItem("email") || "U").charAt(0).toUpperCase()}
+              </div>
+
+              <motion.button
+                whileHover="hover"
                 onClick={() => {
                   localStorage.removeItem("token");
                   localStorage.removeItem("userId");
                   route.push("/");
                 }}
-                size={25}
-                className="text-rose-700"
-              />
-            </motion.span>
-
-            <motion.span
-              initial={{ x: 0, rotate: -40 }}
-              variants={{
-                hover: { x: 4, rotate: 0 },
-              }}
-              className="ml-0.5"
-            ></motion.span>
-          </motion.p>
+                className="p-2 text-neutral-400 hover:text-rose-400 hover:bg-neutral-900/50 rounded-lg transition-colors duration-200"
+              >
+                <TbLogout className="w-5 h-5" />
+              </motion.button>
+            </div>
+          </div>
         </div>
-      </div>
-      <DashboardSubscription />
+      </header>
+
+      <main className="w-full">
+        <DashboardSubscription />
+      </main>
     </div>
   );
 }

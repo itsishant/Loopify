@@ -13,6 +13,7 @@ export const LoginUser = async (
 
     localStorage.setItem("userId", response?.data?._id);
     localStorage.setItem("token", response?.data?.token);
+    localStorage.setItem("email", response?.data?.email);
     return response.data;
   } catch (error) {
     console.log("Error while logging in user api");

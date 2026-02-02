@@ -12,11 +12,10 @@ export const createUser = async (email: string, password: string) => {
 
     localStorage.setItem("userId", response?.data?.data?._id);
     localStorage.setItem("token", response?.data?.data?.token);
-    console.log("response data", response);
+    localStorage.setItem("email", response?.data?.data?.email);
 
     return response.data;
   } catch (error) {
     console.log("Error while creating user api");
   }
 };
-  

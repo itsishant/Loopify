@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { TbSearch, TbFilter, TbLayoutGrid, TbList } from "react-icons/tb";
 import { createSubscription } from "../../api/post/[...subscriptionApi]/subscription.api";
 import { GetSubscription } from "../../api/get/[...subscriptionApi]/subscription.api";
+import { DeleteSubscription } from "../../api/delete/[...subscriptionApi]/subscription.api";
+import { EditSubscription } from "../../api/put/[...subscriptionApi]/subscription.api";
 
 export const DashboardSubscription = () => {
   const [formData, setFormData] = useState({
@@ -27,19 +30,28 @@ export const DashboardSubscription = () => {
 
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState("");
+  const [viewMode, setViewMode] = useState("grid");
 
   useEffect(() => {
     const fetchSubscriptions = async () => {
-      const data = await GetSubscription();
-      if (data) {
-        setSubscriptions(data);
+      try {
+        const data = await GetSubscription();
+        if (data) {
+          setSubscriptions(data);
+        }
+      } catch (err) {
+        console.error("Error fetching subscriptions:", err);
+      } finally {
+        setInitialLoading(false);
       }
     };
 
     fetchSubscriptions();
-  });
+  }, []);
 
   const handleInputChange = (path: string, value: any) => {
     const keys = path.split(".");
@@ -115,7 +127,57 @@ export const DashboardSubscription = () => {
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const handleEditClick = (subscription: any) => {
+    setFormData(subscription);
+    setEditingId(subscription._id);
+    setShowForm(true);
+  };
+
+  const handleEditSubscription = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      return setError("User not authenticated. Please log in.");
+    }
+
+    if (
+      formData.subscriptionDetails.appName &&
+      formData.billingDetails.amount &&
+      editingId
+    ) {
+      setLoading(true);
+      setError("");
+      try {
+        const response = await EditSubscription(editingId, formData);
+
+        if (!response || !response.data) {
+          throw new Error("Failed to update subscription");
+        }
+
+        setSubscriptions(
+          subscriptions.map((sub) => (sub._id === editingId ? formData : sub)),
+        );
+        setFormData({
+          subscriptionDetails: { appName: "", category: "", planType: "" },
+          billingDetails: {
+            amount: "",
+            currency: "USD",
+            paymentMethod: "",
+            autoRenew: false,
+          },
+          datesDetails: { startDate: "", nextBillingDate: "" },
+          remindaerDaysBefore: "",
+          status: "Active",
+        });
+        setEditingId(null);
+        setShowForm(false);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+        console.error("Error updating subscription:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
     switch (status) {
       case "Active":
         return "text-emerald-400 border-l-4 border-emerald-400";
@@ -133,7 +195,7 @@ export const DashboardSubscription = () => {
   return (
     <div className="w-full min-h-screen bg-black pt-8">
       <div className="max-w-7xl mx-auto px-8 py-12">
-        <div className="flex justify-between items-center mb-12">
+        <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-semibold font-poppins text-neutral-300 mb-2">
               My Subscriptions
@@ -142,18 +204,60 @@ export const DashboardSubscription = () => {
               Manage your active subscriptions and billing details
             </p>
           </div>
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="px-6 py-3 bg-neutral-100 text-black font-medium rounded-lg hover:bg-gray-100 transition-colors duration-200"
-          >
-            {showForm ? "Cancel" : "Add Subscription +"}
-          </button>
+        </div>
+
+        <div className="flex items-center justify-between gap-4 mb-8 bg-black rounded-lg ">
+          <div className="flex-1">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search subscriptions..."
+                className="w-full px-4 py-2.5 bg-neutral-800/50 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:border-neutral-600 focus:bg-neutral-800 transition-all duration-200 text-sm"
+              />
+              <TbSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 w-4 h-4" />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button className="p-2 text-neutral-400 hover:text-neutral-300 hover:bg-neutral-800/50 rounded-lg transition-colors duration-200">
+              <TbFilter className="w-4 h-4" />
+            </button>
+
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`p-2 rounded-lg transition-colors duration-200 ${
+                viewMode === "grid"
+                  ? "text-neutral-300 bg-neutral-800/50"
+                  : "text-neutral-400 hover:text-neutral-300 hover:bg-neutral-800/50"
+              }`}
+            >
+              <TbLayoutGrid className="w-4 h-4" />
+            </button>
+
+            <button
+              onClick={() => setViewMode("list")}
+              className={`p-2 rounded-lg transition-colors duration-200 ${
+                viewMode === "list"
+                  ? "text-neutral-300 bg-neutral-800/50"
+                  : "text-neutral-400 hover:text-neutral-300 hover:bg-neutral-800/50"
+              }`}
+            >
+              <TbList className="w-4 h-4" />
+            </button>
+
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="px-4 py-2 bg-white text-black text-sm font-medium rounded-lg hover:bg-gray-100 transition-colors duration-200"
+            >
+              {showForm ? "Cancel" : "Add New +"}
+            </button>
+          </div>
         </div>
 
         {showForm && (
           <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8 mb-12">
             <h2 className="text-xl font-light text-white mb-8">
-              New Subscription
+              {editingId ? "Edit Subscription" : "New Subscription"}
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
@@ -373,14 +477,35 @@ export const DashboardSubscription = () => {
 
             <div className="flex gap-4">
               <button
-                onClick={handleAddSubscription}
+                onClick={
+                  editingId ? handleEditSubscription : handleAddSubscription
+                }
                 disabled={loading}
                 className="px-6 py-3 bg-white text-black font-medium rounded-lg hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? "Saving..." : "Save"}
+                {loading ? "Saving..." : editingId ? "Update" : "Save"}
               </button>
               <button
-                onClick={() => setShowForm(false)}
+                onClick={() => {
+                  setShowForm(false);
+                  setEditingId(null);
+                  setFormData({
+                    subscriptionDetails: {
+                      appName: "",
+                      category: "",
+                      planType: "",
+                    },
+                    billingDetails: {
+                      amount: "",
+                      currency: "USD",
+                      paymentMethod: "",
+                      autoRenew: false,
+                    },
+                    datesDetails: { startDate: "", nextBillingDate: "" },
+                    remindaerDaysBefore: "",
+                    status: "Active",
+                  });
+                }}
                 disabled={loading}
                 className="px-6 py-3 bg-neutral-800 text-white font-medium rounded-lg hover:bg-neutral-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -390,7 +515,43 @@ export const DashboardSubscription = () => {
           </div>
         )}
 
-        {subscriptions.length === 0 ? (
+        {initialLoading ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
+            {[...Array(6)].map((_, index) => (
+              <div
+                key={index}
+                className="relative bg-neutral-900/40 backdrop-blur-sm border border-neutral-800/50 rounded-xl p-6 animate-pulse"
+              >
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex items-center gap-3 flex-1">
+                    <div className="w-11 h-11 rounded-lg bg-neutral-800/80 border border-neutral-700/50" />
+                    <div className="flex-1">
+                      <div className="h-4 bg-neutral-800 rounded w-3/4 mb-2" />
+                      <div className="h-3 bg-neutral-800 rounded w-1/2" />
+                    </div>
+                  </div>
+                  <div className="h-6 bg-neutral-800 rounded w-16" />
+                </div>
+
+                <div className="mb-6">
+                  <div className="h-8 bg-neutral-800 rounded w-1/3 mb-2" />
+                  <div className="h-3 bg-neutral-800 rounded w-1/4" />
+                </div>
+
+                <div className="space-y-3 mb-6 pb-6 border-b border-neutral-800/50">
+                  <div className="h-4 bg-neutral-800 rounded w-full" />
+                  <div className="h-4 bg-neutral-800 rounded w-full" />
+                  <div className="h-4 bg-neutral-800 rounded w-full" />
+                </div>
+
+                <div className="flex gap-2">
+                  <div className="flex-1 h-9 bg-neutral-800 rounded" />
+                  <div className="h-9 bg-neutral-800 rounded w-16" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : subscriptions.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-32">
             <div className="w-20 h-20 rounded-2xl bg-neutral-900/50 border border-neutral-800 flex items-center justify-center mb-6">
               <svg
@@ -424,10 +585,9 @@ export const DashboardSubscription = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
             {subscriptions.map((sub) => (
               <div
-                key={sub.id}
+                key={sub._id}
                 className="relative bg-neutral-900/40 backdrop-blur-sm border border-neutral-800/50 rounded-xl p-6 hover:border-neutral-700 transition-all duration-300 group"
               >
-                {/* Header */}
                 <div className="flex items-start justify-between mb-6">
                   <div className="flex items-center gap-3">
                     <div className="w-11 h-11 rounded-lg bg-neutral-800/80 border border-neutral-700/50 flex items-center justify-center">
@@ -451,7 +611,7 @@ export const DashboardSubscription = () => {
                       sub.status === "Active"
                         ? "bg-emerald-500/10 text-emerald-400"
                         : sub.status === "Inactive"
-                          ? "bg-neutral-700/50 text-neutral-400"
+                          ? "bg-yellow-500/10 text-yellow-400"
                           : sub.status === "Paused"
                             ? "bg-amber-500/10 text-amber-400"
                             : "bg-rose-500/10 text-rose-400"
@@ -461,7 +621,6 @@ export const DashboardSubscription = () => {
                   </span>
                 </div>
 
-                {/* Pricing */}
                 <div className="mb-6">
                   <div className="flex items-baseline gap-1 mb-1">
                     <span className="text-neutral-200 text-3xl font-bold tracking-tight">
@@ -496,7 +655,6 @@ export const DashboardSubscription = () => {
                   )}
                 </div>
 
-                {/* Details */}
                 <div className="space-y-3 mb-6 pb-6 border-b border-neutral-800/50">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-neutral-500">Payment</span>
@@ -523,12 +681,17 @@ export const DashboardSubscription = () => {
                   </div>
                 </div>
 
-                {/* Actions */}
                 <div className="flex gap-2">
-                  <button className="flex-1 px-3 py-2 bg-neutral-800/60 hover:bg-neutral-800 text-neutral-300 text-xs font-medium rounded-lg transition-colors duration-200">
+                  <button
+                    onClick={() => handleEditClick(sub)}
+                    className="flex-1 px-3 py-2 bg-neutral-800/60 hover:bg-neutral-800 text-neutral-300 text-xs font-medium rounded-lg transition-colors duration-200"
+                  >
                     Edit
                   </button>
-                  <button className="px-3 py-2 bg-neutral-800/60 hover:bg-rose-500/10 text-neutral-400 hover:text-rose-400 text-xs font-medium rounded-lg transition-all duration-200">
+                  <button
+                    onClick={async () => await DeleteSubscription(sub._id)}
+                    className="px-3 py-2 bg-neutral-800/60 hover:bg-rose-500/10 text-neutral-400 hover:text-rose-400 text-xs font-medium rounded-lg transition-all duration-200"
+                  >
                     Delete
                   </button>
                 </div>
