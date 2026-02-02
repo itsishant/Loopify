@@ -1,5 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
+import { LoginUser } from "../api/post/[...loginApi]/login.api";
+import { useRouter } from "next/navigation";
 export default function Signin() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const route = useRouter();
   return (
     <div className="bg-black flex justify-center items-center min-h-screen">
       <div className="bg-gray-900 w-lg h-130 p-8 shadow-lg rounded-lg">
@@ -8,19 +16,38 @@ export default function Signin() {
         </div>
         <div className="mt-16 ">
           <input
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
             placeholder="email"
             type="text"
             className="mt-10 w-full p-3 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
           ></input>
 
           <input
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
             placeholder="password"
             type="password"
             className="mt-10 w-full p-3 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
           ></input>
         </div>
         <div className="flex justify-center items-center ">
-          <button className="flex justify-center items-center w-full hover:cursor-pointer">
+          <button
+            onClick={async () => {
+              const result = await LoginUser(email, password);
+              if (result?.success) {
+                localStorage.setItem("token", result?.token || "");
+
+                localStorage.setItem("userId", result?.userId || "");
+                route.push("/dashboard");
+              } else {
+                console.log("Login failed");
+              }
+            }}
+            className="flex justify-center items-center w-full hover:cursor-pointer"
+          >
             <div className="mt-10 w-full flex justify-center  items-center p-3 rounded bg-blue-800 text-white font-semibold hover:bg-blue-700 text-center">
               Log in
             </div>

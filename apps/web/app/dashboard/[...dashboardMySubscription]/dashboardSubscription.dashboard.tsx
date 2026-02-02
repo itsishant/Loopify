@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createSubscription } from "../../api/post/[...subscriptionApi]/subscription.api";
+import { GetSubscription } from "../../api/get/[...subscriptionApi]/subscription.api";
 
 export const DashboardSubscription = () => {
   const [formData, setFormData] = useState({
@@ -28,6 +29,17 @@ export const DashboardSubscription = () => {
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchSubscriptions = async () => {
+      const data = await GetSubscription();
+      if (data) {
+        setSubscriptions(data);
+      }
+    };
+
+    fetchSubscriptions();
+  });
 
   const handleInputChange = (path: string, value: any) => {
     const keys = path.split(".");
@@ -93,6 +105,7 @@ export const DashboardSubscription = () => {
           status: "Active",
         });
         setShowForm(false);
+        localStorage.setItem("id", response.data._id);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
         console.error("Error saving subscription:", err);

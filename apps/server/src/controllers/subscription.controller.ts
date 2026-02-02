@@ -99,11 +99,11 @@ const getSubscription = async (
   res: Response,
 ) => {
   try {
-    const id = req.params.id;
+    const userId = req.params.userId;
 
-    const subcription = await getSubscriptionId(id);
+    const subscription = await getSubscriptionId(userId);
 
-    if (!subcription) {
+    if (!subscription) {
       return res.status(404).json({
         success: false,
         message: "No any subscription found with this id",
@@ -113,7 +113,7 @@ const getSubscription = async (
     return res.status(200).json({
       success: true,
       message: "Subscription fetched successfully",
-      data: { subcription },
+      data: { subscription },
     });
   } catch (error) {
     console.log(`Error while getting subscription ${error}`);
@@ -153,13 +153,10 @@ const updateSubscription = async (
   }
 };
 
-
 const deleteSubscription = async (
   req: Request<params, {}, ISubscription>,
   res: Response,
-  
 ) => {
-  
   try {
     const id = req.params.id;
 
@@ -190,4 +187,3 @@ export {
   updateSubscription,
   deleteSubscription,
 };
-

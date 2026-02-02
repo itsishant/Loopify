@@ -58,7 +58,7 @@ export default function Signup() {
                 localStorage.setItem("email", email);
                 route.push("/signup/otp");
               } else {
-                alert(result?.message || "Failed to create account");
+                console.log(result?.message || "Failed to create account");
               }
             }}
             className="flex justify-center items-center w-full hover:cursor-pointer"

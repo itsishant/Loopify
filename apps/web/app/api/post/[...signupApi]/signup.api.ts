@@ -19,3 +19,4 @@ export const createUser = async (email: string, password: string) => {
     console.log("Error while creating user api");
   }
 };
+  

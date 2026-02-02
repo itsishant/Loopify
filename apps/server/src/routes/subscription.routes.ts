@@ -13,7 +13,7 @@ router
   .route("/create-subscription")
   .post(middlewareAuthentication, createSubscription);
 router
-  .route("/get-subscription/:id")
+  .route("/get-subscription/:userId")
   .get(middlewareAuthentication, getSubscription);
 router
   .route("/update-subscription/:id")

@@ -6,8 +6,10 @@ import { TbLogout } from "react-icons/tb";
 import "@fontsource/poppins/400-italic.css";
 import { GoArrowRight } from "react-icons/go";
 import { DashboardSubscription } from "./[...dashboardMySubscription]/dashboardSubscription.dashboard";
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
+  const route = useRouter();
   return (
     <div className="flex flex-col justify-center items-center">
       <div
@@ -50,7 +52,15 @@ export default function DashboardPage() {
                 hover: { x: 0 },
               }}
             >
-              <TbLogout size={25} className="text-rose-700"/>
+              <TbLogout
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  localStorage.removeItem("userId");
+                  route.push("/");
+                }}
+                size={25}
+                className="text-rose-700"
+              />
             </motion.span>
 
             <motion.span

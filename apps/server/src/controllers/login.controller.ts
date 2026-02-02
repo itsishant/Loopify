@@ -46,6 +46,7 @@ const loginUser = async (req: Request, res: Response) => {
       success: true,
       message: "Welcome back!\nLogin Successful",
       token: newToken,
+      userId: existingUser._id
     });
   } catch (error) {
     console.log("Error in login user:", error);
