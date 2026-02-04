@@ -12,8 +12,9 @@ import {
 } from "react-icons/tb";
 import "@fontsource/poppins/400-italic.css";
 import { DashboardSubscription } from "./[...dashboardMySubscription]/dashboardSubscription.dashboard";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 
 export default function DashboardPage() {
   const route = useRouter();
@@ -48,6 +49,23 @@ export default function DashboardPage() {
             <nav className="hidden lg:flex items-center gap-1">
               {navItems.map((item) => (
                 <button
+                  onClick={() => {
+                    item === "Payments"
+                      ? route.push("/dashboard/payments")
+                      : null;
+                    item === "Subscriptions"
+                      ? route.push("/dashboard/subscriptions")
+                      : null;
+                    item === "Analytics"
+                      ? route.push("/dashboard/analytics")
+                      : null;
+                    item === "Settings"
+                      ? route.push("/dashboard/settings")
+                      : null;
+                    item === "Support"
+                      ? route.push("/dashboard/support")
+                      : null;
+                  }}
                   key={item}
                   className="px-3 py-2 text-sm text-neutral-400 hover:text-neutral-300 hover:bg-neutral-900/50 rounded-md transition-colors duration-200"
                 >
@@ -57,8 +75,6 @@ export default function DashboardPage() {
             </nav>
 
             <div className="flex items-center gap-3 ml-auto">
-             
-
               <button className="p-2 text-neutral-400 hover:text-neutral-300 hover:bg-neutral-900/50 rounded-lg transition-colors duration-200 relative">
                 <TbBell className="w-5 h-5" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />

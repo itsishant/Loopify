@@ -124,6 +124,23 @@ export default function Payments() {
               {navItems.map((item) => (
                 <button
                   key={item}
+                   onClick={() => {
+                    item === "Payments"
+                      ? route.push("/dashboard/payments")
+                      : null;
+                    item === "Subscriptions"
+                      ? route.push("/dashboard")
+                      : null;
+                    item === "Analytics"
+                      ? route.push("/dashboard/analytics")
+                      : null;
+                    item === "Settings"
+                      ? route.push("/dashboard/settings")
+                      : null;
+                    item === "Support"
+                      ? route.push("/dashboard/support")
+                      : null;
+                  }}
                   className="px-3 py-2 text-sm text-gray-400 hover:text-gray-200 hover:bg-gray-900/50 rounded-md transition-colors duration-200"
                 >
                   {item}
@@ -169,7 +186,6 @@ export default function Payments() {
               </p>
             </div>
 
-            {/* Summary Cards */}
             <div className="grid grid-cols-3 gap-4 mb-8">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -224,7 +240,6 @@ export default function Payments() {
               </motion.div>
             </div>
 
-            {/* Subscriptions Table */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -349,7 +364,6 @@ export default function Payments() {
         </div>
       </main>
 
-      {/* Detail Modal */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: selectedSubscription ? 1 : 0 }}
@@ -372,7 +386,6 @@ export default function Payments() {
         >
           {selectedSubscription && (
             <div className="bg-gray-900 border border-gray-800 rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-              {/* Header */}
               <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-cyan-600 p-6 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
@@ -396,9 +409,7 @@ export default function Payments() {
                 </button>
               </div>
 
-              {/* Content */}
               <div className="p-6 space-y-6">
-                {/* Status & Category */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-gray-400 text-sm mb-1">Status</p>
@@ -422,7 +433,6 @@ export default function Payments() {
                   </div>
                 </div>
 
-                {/* Plan & Amount */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-gray-400 text-sm mb-1">Plan Type</p>
@@ -439,7 +449,6 @@ export default function Payments() {
                   </div>
                 </div>
 
-                {/* Dates */}
                 <div className="bg-gray-800/50 rounded-lg p-4 space-y-3">
                   <div>
                     <p className="text-gray-400 text-sm mb-1">Start Date</p>
@@ -464,8 +473,7 @@ export default function Payments() {
                     </p>
                   </div>
                 </div>
-
-                {/* Payment Method & Auto Renew */}
+]
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-gray-400 text-sm mb-1">Payment Method</p>
@@ -487,7 +495,6 @@ export default function Payments() {
                   </div>
                 </div>
 
-                {/* Actions */}
                 <div className="flex gap-3">
                   <motion.button
                     whileHover={{ scale: 1.02 }}

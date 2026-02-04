@@ -48,6 +48,23 @@ export default function DashboardHeader() {
               {navItems.map((item) => (
                 <button
                   key={item}
+                   onClick={() => {
+                    item === "Payments"
+                      ? route.push("/dashboard/payments")
+                      : null;
+                    item === "Subscriptions"
+                      ? route.push("/dashboard/subscriptions")
+                      : null;
+                    item === "Analytics"
+                      ? route.push("/dashboard/analytics")
+                      : null;
+                    item === "Settings"
+                      ? route.push("/dashboard/settings")
+                      : null;
+                    item === "Support"
+                      ? route.push("/dashboard/support")
+                      : null;
+                  }}
                   className="px-3 py-2 text-sm text-neutral-400 hover:text-neutral-300 hover:bg-neutral-900/50 rounded-md transition-colors duration-200"
                 >
                   {item}
