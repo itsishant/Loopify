@@ -156,6 +156,7 @@ export default function Payments() {
           </div>
         </div>
       </header>
+      
       <main>
         <div className="pt-8 bg-black min-h-screen">
           <div className="max-w-7xl mx-auto px-8 py-12">
