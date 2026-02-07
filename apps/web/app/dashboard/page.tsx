@@ -36,7 +36,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between gap-8">
             <div className="flex items-center gap-3 min-w-fit">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
-                <span className="text-black font-bold text-sm">S</span>
+                <span className="text-black font-bold text-sm">{localStorage.getItem("email")?.charAt(0).toUpperCase() || "U"}</span>
               </div>
               <div>
                 <h1 className="text-sm font-semibold text-white">

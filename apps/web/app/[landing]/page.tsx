@@ -10,8 +10,26 @@ import { CardLanding } from "./[...landingCards]/landingCard.landing";
 import { TrustedPartner } from "./[...landingSubscription]/landingPartners.landing";
 import { LandingSteps } from "./[...landingSteps]/landingSetps.landing";
 import { LandingPrices } from "./[...landingPrice]/landingPrice.landing";
+import { useEffect, useState } from "react";
 export const LandingPage = () => {
   const route = useRouter();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        route.push("/dashboard");
+      }
+      else {
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log("Error checking authentication", error);
+    }
+  }, [route]);
+
+  if (loading) return null;
 
   return (
     <motion.div
