@@ -169,9 +169,9 @@ export default function Setting() {
                 onClick={() => setEyeOpen(!eyeOpen)}
               >
                 {eyeOpen ? (
-                  <BsEyeSlashFill className="w-5 h-5" />
-                ) : (
                   <BsEyeFill className="w-5 h-5" />
+                ) : (
+                  <BsEyeSlashFill className="w-5 h-5" />
                 )}
               </button>
             </p>

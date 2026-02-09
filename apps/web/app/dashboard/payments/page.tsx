@@ -110,7 +110,10 @@ export default function Payments() {
           <div className="flex items-center justify-between gap-8">
             <div className="flex items-center gap-3 min-w-fit">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-                <span className="text-black font-bold text-sm">{localStorage.getItem("email")?.charAt(0).toUpperCase() || "U"}</span>
+                <span className="text-black font-bold text-sm">
+                  {localStorage.getItem("email")?.charAt(0).toUpperCase() ||
+                    "U"}
+                </span>
               </div>
               <div>
                 <h1 className="text-sm font-semibold text-white">
@@ -124,13 +127,11 @@ export default function Payments() {
               {navItems.map((item) => (
                 <button
                   key={item}
-                   onClick={() => {
+                  onClick={() => {
                     item === "Payments"
                       ? route.push("/dashboard/payments")
                       : null;
-                    item === "Subscriptions"
-                      ? route.push("/dashboard")
-                      : null;
+                    item === "Subscriptions" ? route.push("/dashboard") : null;
                     item === "Analytics"
                       ? route.push("/dashboard/analytics")
                       : null;
@@ -173,7 +174,7 @@ export default function Payments() {
           </div>
         </div>
       </header>
-      
+
       <main>
         <div className="pt-8 bg-black min-h-screen">
           <div className="max-w-7xl mx-auto px-8 py-12">
@@ -432,7 +433,6 @@ export default function Payments() {
                     </p>
                   </div>
                 </div>
-
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-gray-400 text-sm mb-1">Plan Type</p>
@@ -448,7 +448,6 @@ export default function Payments() {
                     </p>
                   </div>
                 </div>
-
                 <div className="bg-gray-800/50 rounded-lg p-4 space-y-3">
                   <div>
                     <p className="text-gray-400 text-sm mb-1">Start Date</p>
@@ -473,7 +472,7 @@ export default function Payments() {
                     </p>
                   </div>
                 </div>
-]
+                ]
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-gray-400 text-sm mb-1">Payment Method</p>
@@ -494,7 +493,6 @@ export default function Payments() {
                     </p>
                   </div>
                 </div>
-
                 <div className="flex gap-3">
                   <motion.button
                     whileHover={{ scale: 1.02 }}

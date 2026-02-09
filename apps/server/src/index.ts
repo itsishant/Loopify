@@ -13,7 +13,7 @@ app.use(
 );
 dotenv.config();
 
-const PORT = 3000;  
+const PORT = 3000;
 
 import { connectToDatabase } from "./database/connection.js";
 connectToDatabase();
@@ -38,8 +38,13 @@ app.use("/api/v1/subscription", subscriptionRouter);
 import googelAuthRouter from "./routes/authentication/google.authentication.routes.js";
 app.use("/api/v1/auth", googelAuthRouter);
 
+// otp verification routes
 import otpVerificationRouter from "./routes/authentication/otp-verification.routes.js";
 app.use("/api/v1/auth", otpVerificationRouter);
+
+// mailer routes
+import reminderMailRouter from "./routes/reminderMail.routes.js";
+app.use("/api/v1/mailer", reminderMailRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

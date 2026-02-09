@@ -9,7 +9,7 @@ if (!JWT_SECRET) {
 }
 const jwtSign = async (userId: string) => {
   const signNewToken = await jwt.sign({ id: userId }, JWT_SECRET!, {
-    expiresIn: "7d",
+    expiresIn: "1d",
   });
   return signNewToken;
 };

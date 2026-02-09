@@ -60,7 +60,7 @@ const subscriptionSchema = new mongoose.Schema({
     },
   },
 
-  remindaerDaysBefore: {
+  reminderDaysBefore: {
     type: Number,
     enum: [1, 3, 7, 14, 30],
     required: true,

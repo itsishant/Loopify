@@ -20,8 +20,7 @@ export const LandingPage = () => {
       const token = localStorage.getItem("token");
       if (token) {
         route.push("/dashboard");
-      }
-      else {
+      } else {
         setLoading(false);
       }
     } catch (error) {

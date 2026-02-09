@@ -8,7 +8,11 @@ dotenv.config();
 const user: IMailer["user"] = process.env.USER_EMAIL || "";
 const pass: IMailer["pass"] = process.env.USER_PASS || "";
 
-const mailer = async (toMail: string, otp: string) => {
+const reminderMail = async (
+  toMail: string,
+  reminderDay: string,
+  appName: string,
+) => {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -21,11 +25,11 @@ const mailer = async (toMail: string, otp: string) => {
     });
 
     const info = await transporter.sendMail({
-      from: "Loopify",
+      from: "Loopify <no-reply@loopify.com>",
       to: toMail,
-      subject: "OTP Verification",
-      text: `Your OTP code is ${otp}. It is valid for 5 minutes.`,
-      html: `<b>Your OTP : ${otp}</b><br/><p>Valid till 5 minutes</p>`,
+      subject: "Reminder Notification",
+      text: `This is a reminder for your subscription to ${appName} due in ${reminderDay} day(s).`,
+      html: `<b>Reminder:</b> Your subscription to ${appName} is due in ${reminderDay} day(s).`,
     });
 
     console.log("Message sent:", info.messageId);
@@ -36,4 +40,4 @@ const mailer = async (toMail: string, otp: string) => {
   }
 };
 
-export { mailer };
+export { reminderMail };

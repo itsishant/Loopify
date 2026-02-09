@@ -5,11 +5,11 @@ export const DeleteSubscription = async (id: string) => {
   try {
     const response = await axios.delete(
       `${API_URL}/subscription/delete-subscription/${id}`,
-        {
-            headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-            },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
       },
     );
 

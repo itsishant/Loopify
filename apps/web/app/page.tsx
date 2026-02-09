@@ -5,5 +5,5 @@ export default function App() {
     <div>
       <LandingPage />
     </div>
-  )
+  );
 }

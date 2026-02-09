@@ -3,6 +3,6 @@ export interface ISignupData {
   password: string;
   userId?: string;
   id?: string;
-  googleId? : string | null;
+  googleId?: string | null;
   otp?: string | null;
 }

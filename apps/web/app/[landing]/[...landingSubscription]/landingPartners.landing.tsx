@@ -8,8 +8,8 @@ export const TrustedPartner = () => {
           Trusted Partners
         </div>
         <p className="text-neutral-500 text-lg">
-          Trusted partners who collaborate with Loopify to enhance your subscription
-          management experience
+          Trusted partners who collaborate with Loopify to enhance your
+          subscription management experience
         </p>
       </div>
       <Marquee direction="right" speed={50}>
