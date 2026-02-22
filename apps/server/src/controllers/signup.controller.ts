@@ -35,7 +35,18 @@ const createUser = async (req: Request<{}, {}, ISignupData>, res: Response) => {
 
     const genrotp = generateOTP(4);
 
-    await mailer(req.body.email, genrotp);
+    try {
+      await mailer(req.body.email, genrotp);
+    } catch (mailError: any) {
+      console.error("[Signup] Email send error:", {
+        email: req.body.email,
+        error: mailError.message,
+        code: mailError.code,
+      });
+      // Continue with signup even if email fails - user can request OTP again
+      // This prevents signup failures due to transient email service issues
+    }
+
     req.body.otp = genrotp;
     const newUser = await userCreate(req);
 
