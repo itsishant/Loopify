@@ -35,16 +35,22 @@ const createUser = async (req: Request<{}, {}, ISignupData>, res: Response) => {
 
     const genrotp = generateOTP(4);
 
+    // Send OTP email - this should not fail signup
     try {
       await mailer(req.body.email, genrotp);
+      console.log("[Signup] OTP email sent successfully");
     } catch (mailError: any) {
-      console.error("[Signup] Email send error:", {
+      console.error("[Signup] OTP email failed:", {
         email: req.body.email,
         error: mailError.message,
         code: mailError.code,
       });
-      // Continue with signup even if email fails - user can request OTP again
-      // This prevents signup failures due to transient email service issues
+      // Don't fail signup but notify about email issue
+      return res.status(500).json({
+        success: false,
+        message: "Failed to send OTP email",
+        error: "Email service issue: " + mailError.message,
+      });
     }
 
     req.body.otp = genrotp;
