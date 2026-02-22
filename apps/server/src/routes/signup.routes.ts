@@ -1,4 +1,4 @@
-import Router from "express";
+import { Router } from "express";
 import {
   createUser,
   deleteUser,
@@ -6,7 +6,7 @@ import {
 } from "../controllers/signup.controller.js";
 import { middlewareAuthentication } from "../authentication/middleware.authentication.js";
 
-const router = Router();
+const router: Router = Router();
 
 router.route("/get-user/:userId").get(middlewareAuthentication, getUserInfo);
 

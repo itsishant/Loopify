@@ -6,7 +6,7 @@ import { SevenDayMail } from "../controllers/mailer/sevenDay.mailer.controller.j
 import { middlewareAuthentication } from "../authentication/middleware.authentication.js";
 import { ThirtyDayMail } from "../controllers/mailer/thirtyDay.mailer.controller.js";
 
-const router = Router();
+const router: Router = Router();
 
 router.route("/one-day-reminder/:id").post(middlewareAuthentication, OneDayMail);
 router.route("/three-day-reminder/:id").post(middlewareAuthentication, ThreeDayMail);

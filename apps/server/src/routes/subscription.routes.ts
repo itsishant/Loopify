@@ -7,7 +7,7 @@ import {
   updateSubscription,
 } from "../controllers/subscription.controller.js";
 
-const router = Router();
+const router: Router = Router();
 
 router
   .route("/create-subscription")
