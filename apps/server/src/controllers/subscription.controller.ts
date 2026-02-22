@@ -6,23 +6,120 @@ import type { params } from "../types/subcription.type.js";
 import { update } from "../utils/subscription/updateSubcripton.utils.js";
 import { deletion } from "../utils/subscription/deleteSubcription.utils.js";
 
+// const createSubscription = async (
+//   req: Request<{}, {}, ISubscription>,
+//   res: Response,
+// ) => {
+//   try {
+//     const {
+//       appName,
+//       category,
+//       planType,
+//       amount,
+//       currency,
+//       paymentMethod,
+//       autoRenew,
+//       startDate,
+//       nextBillingDate,
+//       remindaerDaysBefore,
+//     } = req.body;
+
+//     if (
+//       !appName ||
+//       !category ||
+//       !planType ||
+//       !amount ||
+//       !currency ||
+//       !paymentMethod ||
+//       autoRenew === undefined ||
+//       !startDate ||
+//       !nextBillingDate ||
+//       remindaerDaysBefore === undefined
+//     ) {
+//       console.log("Invalid input: Missing required fields", req.body);
+//       return res.status(400).json({
+//         success: false,
+//         message: "Invalid input",
+//       });
+//     }
+
+//     const userId = (req as any).user?.id;
+//     if (!userId) {
+//       return res.status(401).json({
+//         success: false,
+//         message: "Unauthorized: User not authenticated",
+//       });
+//     }
+
+//     const transformedData = {
+//       userId,
+//       subscriptionDetails: {
+//         appName,
+//         category,
+//         planType,
+//       },
+//       billingDetails: {
+//         amount,
+//         currency,
+//         paymentMethod,
+//         autoRenew,
+//       },
+//       datesDetails: {
+//         startDate,
+//         nextBillingDate,
+//       },
+//       remindaerDaysBefore,
+//       status: "Active",
+//     };
+
+//     const createdData = await createSubscriptionData(transformedData);
+//     console.log("created");
+//     if (!createdData) {
+//       console.log("Failed to create subscription");
+//       return res.status(400).json({
+//         success: false,
+//         message: "Unable to create Subscription",
+//       });
+//     }
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Subscription created successfully",
+//       data: createdData,
+//     });
+//   } catch (error) {
+//     console.log("Error while creating subscription: ", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Internal Server Error",
+//     });
+//   }
+// };
+
 const createSubscription = async (
   req: Request<{}, {}, ISubscription>,
   res: Response,
 ) => {
   try {
+
     const {
-      appName,
-      category,
-      planType,
-      amount,
-      currency,
-      paymentMethod,
-      autoRenew,
-      startDate,
-      nextBillingDate,
-      remindaerDaysBefore,
+      subscriptionDetails,
+      billingDetails,
+      datesDetails,
+      reminderDaysBefore,
+      status,
     } = req.body;
+
+    if (!subscriptionDetails || !billingDetails || !datesDetails) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid input: Missing required nested objects",
+      });
+    }
+
+    const { appName, category, planType } = subscriptionDetails;
+    const { amount, currency, paymentMethod, autoRenew } = billingDetails;
+    const { startDate, nextBillingDate } = datesDetails;
 
     if (
       !appName ||
@@ -34,11 +131,12 @@ const createSubscription = async (
       autoRenew === undefined ||
       !startDate ||
       !nextBillingDate ||
-      remindaerDaysBefore === undefined
+      reminderDaysBefore === undefined ||
+      !status
     ) {
       return res.status(400).json({
         success: false,
-        message: "Invalid input",
+        message: "Invalid input: Missing required fields",
       });
     }
 
@@ -58,22 +156,23 @@ const createSubscription = async (
         planType,
       },
       billingDetails: {
-        amount,
+        amount: typeof amount === "string" ? parseFloat(amount) : amount,
         currency,
         paymentMethod,
         autoRenew,
       },
       datesDetails: {
-        startDate,
-        nextBillingDate,
+        startDate: new Date(startDate),
+        nextBillingDate: new Date(nextBillingDate),
       },
-      remindaerDaysBefore,
-      status: "Active",
+      reminderDaysBefore,
+      status,
     };
 
     const createdData = await createSubscriptionData(transformedData);
-    console.log("created");
+
     if (!createdData) {
+      console.log("Failed to create subscription");
       return res.status(400).json({
         success: false,
         message: "Unable to create Subscription",
