@@ -11,12 +11,14 @@ const pass: IMailer["pass"] = process.env.USER_PASS || "";
 const mailer = async (toMail: string, otp: string) => {
   try {
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+port: 465,
+secure: true,
       auth: {
         user: user,
         pass: pass,
       },
-      connectionTimeout: 5000, // 5 second timeout
+      connectionTimeout: 5000,
       socketTimeout: 5000,
     });
 
