@@ -8,13 +8,11 @@ dotenv.config();
 const user: IMailer["user"] = process.env.USER_EMAIL || "";
 const pass: IMailer["pass"] = process.env.USER_PASS || "";
 
-// Log email config on startup for debugging
 console.log("[Mailer] Email config:", {
   user: user ? user.substring(0, 5) + "***" : "NOT SET",
   pass: pass ? "***" : "NOT SET",
 });
 
-// Retry with exponential backoff for transient errors like ETIMEDOUT
 const retryWithBackoff = async (
   fn: () => Promise<any>,
   maxRetries: number = 3,
@@ -56,15 +54,17 @@ const mailer = async (toMail: string, otp: string) => {
   try {
     const sendEmail = async () => {
       const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: user,
-          pass: pass,
-        },
-        connectionTimeout: 20000, // Increased from 5s to 15s
-        socketTimeout: 20000,
-        greetingTimeout: 20000,
-      });
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user,
+    pass,
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
+});
 
       console.log("[Mailer] Transporter created, attempting to send...");
 
