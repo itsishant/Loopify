@@ -9,7 +9,6 @@ import { MdAttachMoney } from "react-icons/md";
 import { CardLanding } from "./[...landingCards]/landingCard.landing";
 import { TrustedPartner } from "./[...landingSubscription]/landingPartners.landing";
 import { LandingSteps } from "./[...landingSteps]/landingSetps.landing";
-import { LandingPrices } from "./[...landingPrice]/landingPrice.landing";
 import { useEffect, useState } from "react";
 export const LandingPage = () => {
   const route = useRouter();
@@ -170,7 +169,6 @@ export const LandingPage = () => {
       <CardLanding />
       <TrustedPartner />
       <LandingSteps />
-      <LandingPrices />
     </motion.div>
   );
 };

@@ -2,6 +2,7 @@ import { Router } from "express";
 import { middlewareAuthentication } from "../authentication/middleware.authentication.js";
 import {
   createSubscription,
+  createSubscriptionWeb,
   deleteSubscription,
   getSubscription,
   updateSubscription,
@@ -12,6 +13,11 @@ const router: Router = Router();
 router
   .route("/create-subscription")
   .post(middlewareAuthentication, createSubscription);
+
+router
+  .route("/create-subscription-web")
+  .post(middlewareAuthentication, createSubscriptionWeb);
+
 router
   .route("/get-subscription/:userId")
   .get(middlewareAuthentication, getSubscription);

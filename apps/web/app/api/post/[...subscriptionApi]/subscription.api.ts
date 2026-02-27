@@ -3,7 +3,7 @@
 import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-export const createSubscription = (
+export const createSubscription = async (
   appName: string,
   category: string,
   planType: string,
@@ -13,29 +13,43 @@ export const createSubscription = (
   autoRenew: boolean,
   startDate: string,
   nextBillingDate: string,
-  remindaerDaysBefore: string,
+  reminderDaysBefore: string,
 ) => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("Authentication token not found. Please log in again.");
+  }
+
+  if (!API_URL) {
+    throw new Error("API base URL is not configured.");
+  }
+
+  const parsedAmount = Number.parseFloat(amount);
+  const parsedReminderDays = Number.parseInt(reminderDaysBefore, 10);
+
+  if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+    throw new Error("Amount must be a valid number greater than 0.");
+  }
+
+  if (![1, 3, 7, 14, 30].includes(parsedReminderDays)) {
+    throw new Error("Reminder days must be one of: 1, 3, 7, 14, 30.");
+  }
+
   try {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      console.error("No token found in localStorage");
-      throw new Error("Authentication token not found. Please log in again.");
-    }
-
-    const response = axios.post(
-      `${API_URL}/subscription/create-subscription`,
+    const response = await axios.post(
+      `${API_URL}/subscription/create-subscription-web`,
       {
-        appName: appName,
-        category: category,
-        planType: planType,
-        amount: amount,
-        currency: currency,
-        paymentMethod: paymentMethod,
-        autoRenew: autoRenew,
-        startDate: startDate,
-        nextBillingDate: nextBillingDate,
-        remindaerDaysBefore: remindaerDaysBefore,
+        appName: appName.trim(),
+        category,
+        planType,
+        amount: parsedAmount,
+        currency,
+        paymentMethod,
+        autoRenew,
+        startDate,
+        nextBillingDate,
+        reminderDaysBefore: parsedReminderDays,
       },
       {
         headers: {
@@ -46,8 +60,12 @@ export const createSubscription = (
     );
 
     return response;
-  } catch (error) {
-    console.log(`Error while creating subscription ${error}`);
-    throw error;
+  } catch (error: any) {
+    const apiMessage =
+      error?.response?.data?.message ||
+      error?.response?.data?.error ||
+      error?.message ||
+      "Failed to create subscription";
+    throw new Error(apiMessage);
   }
 };

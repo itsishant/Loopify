@@ -54,17 +54,17 @@ const mailer = async (toMail: string, otp: string) => {
   try {
     const sendEmail = async () => {
       const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user,
-    pass,
-  },
-  tls: {
-    rejectUnauthorized: false,
-  },
-});
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+          user,
+          pass,
+        },
+        tls: {
+          rejectUnauthorized: false,
+        },
+      });
 
       console.log("[Mailer] Transporter created, attempting to send...");
 
@@ -77,7 +77,10 @@ const mailer = async (toMail: string, otp: string) => {
       };
 
       const info = await transporter.sendMail(mailOptions);
-      console.log("[Mailer] Email sent successfully. Message ID:", info.messageId);
+      console.log(
+        "[Mailer] Email sent successfully. Message ID:",
+        info.messageId,
+      );
       return info;
     };
 

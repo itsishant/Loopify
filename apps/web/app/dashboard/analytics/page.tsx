@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TbLogout, TbBell, TbX, TbCheck } from "react-icons/tb";
 import { GetSubscription } from "../../api/get/[...subscriptionApi]/subscription.api";
 
@@ -43,6 +43,7 @@ interface Subscription {
   startDate: string;
   nextBillingDate: string;
   status: string;
+  reminderDaysBefore?: number;
 }
 
 export default function Analytics() {
@@ -51,6 +52,12 @@ export default function Analytics() {
   const [loading, setLoading] = useState(true);
   const [selectedSubscription, setSelectedSubscription] =
     useState<Subscription | null>(null);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [userInitial, setUserInitial] = useState("U");
+
+  useEffect(() => {
+    setUserInitial((localStorage.getItem("email") || "U").charAt(0).toUpperCase());
+  }, []);
 
   const generateChartData = (subs: Subscription[]) => {
     if (!subs.length) return [];
@@ -97,6 +104,7 @@ export default function Analytics() {
     const pathPoints = points
       .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`)
       .join(" ");
+      //@ts-ignore
     const lastX = points[points.length - 1].x;
     return `${pathPoints} L ${lastX} 290 L 110 290 Z`;
   };
@@ -106,7 +114,6 @@ export default function Analytics() {
     "Payments",
     "Analytics",
     "Settings",
-    "Support",
   ];
 
   useEffect(() => {
@@ -126,6 +133,7 @@ export default function Analytics() {
             startDate: item.datesDetails?.startDate ?? "",
             nextBillingDate: item.datesDetails?.nextBillingDate ?? "",
             status: item.status ?? "Unknown",
+            reminderDaysBefore: item.remindaerDaysBefore ?? 0,
           }));
 
           const sorted = [...mapped].sort(
@@ -150,23 +158,42 @@ export default function Analytics() {
     fetchSubscriptions();
   }, []);
 
+  const normalizeDate = (dateInput: string | Date) => {
+    const date = new Date(dateInput);
+    date.setHours(0, 0, 0, 0);
+    return date;
+  };
+
+  const reminderSubscriptions = useMemo(() => {
+    return subscriptions.filter((sub) => {
+      const reminderDays = sub.reminderDaysBefore ?? 0;
+      if (!Number.isFinite(reminderDays) || reminderDays <= 0) return false;
+      const billingDate = normalizeDate(sub.nextBillingDate);
+      const reminderDate = new Date(billingDate);
+      reminderDate.setDate(billingDate.getDate() - reminderDays);
+      const today = normalizeDate(new Date());
+      return today >= reminderDate && today <= billingDate;
+    });
+  }, [subscriptions]);
+
+  const hasReminderNotifications = reminderSubscriptions.length > 0;
+
   return (
     <div>
-      <header className="sticky top-0 z-50 border-b border-gray-900 bg-black backdrop-blur-md">
+      <header className="sticky top-0 z-50 border-b border-neutral-800 bg-black/95 backdrop-blur-md">
         <div className="px-6 py-4">
           <div className="flex items-center justify-between gap-8">
             <div className="flex items-center gap-3 min-w-fit">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-linear-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
                 <span className="text-black font-bold text-sm">
-                  {localStorage.getItem("email")?.charAt(0).toUpperCase() ||
-                    "U"}
+                  {userInitial}
                 </span>
               </div>
               <div>
                 <h1 className="text-sm font-semibold text-white">
                   My Subscriptions
                 </h1>
-                <p className="text-xs text-gray-500">Personal</p>
+                <p className="text-xs text-neutral-500">Personal</p>
               </div>
             </div>
 
@@ -185,11 +212,8 @@ export default function Analytics() {
                     item === "Settings"
                       ? route.push("/dashboard/settings")
                       : null;
-                    item === "Support"
-                      ? route.push("/dashboard/support")
-                      : null;
                   }}
-                  className="px-3 py-2 text-sm text-gray-400 hover:text-gray-200 hover:bg-gray-900/50 rounded-md transition-colors duration-200"
+                  className="px-3 py-2 text-sm text-neutral-400 hover:text-neutral-300 hover:bg-neutral-900/50 rounded-md transition-colors duration-200"
                 >
                   {item}
                 </button>
@@ -197,13 +221,49 @@ export default function Analytics() {
             </nav>
 
             <div className="flex items-center gap-3 ml-auto">
-              <button className="p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-900/50 rounded-lg transition-colors duration-200 relative">
-                <TbBell className="w-5 h-5" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-              </button>
+              <div className="relative">
+                <button
+                  onClick={() => setShowNotifications((prev) => !prev)}
+                  className={`p-2 rounded-lg transition-colors duration-200 relative ${
+                    hasReminderNotifications
+                      ? "text-rose-300 hover:text-rose-200 hover:bg-rose-500/10"
+                      : "text-neutral-400 hover:text-neutral-300 hover:bg-neutral-900/50"
+                  }`}
+                >
+                  <TbBell className={`w-5 h-5 ${hasReminderNotifications ? "animate-pulse" : ""}`} />
+                  {hasReminderNotifications && (
+                    <span className="absolute top-1 right-1 flex h-2.5 w-2.5">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-300/80" />
+                      <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-rose-400" />
+                    </span>
+                  )}
+                </button>
+                {showNotifications && (
+                  <div className="absolute right-0 mt-2 w-80 bg-neutral-950 border border-neutral-800 rounded-lg shadow-xl z-50">
+                    <div className="px-4 py-3 border-b border-neutral-800">
+                      <p className="text-sm font-semibold text-white">Reminder Notifications</p>
+                    </div>
+                    <div className="max-h-72 overflow-y-auto">
+                      {reminderSubscriptions.length === 0 ? (
+                        <p className="px-4 py-4 text-sm text-neutral-400">No reminders due today.</p>
+                      ) : (
+                        reminderSubscriptions.map((sub) => (
+                          <div key={sub.id} className="px-4 py-3 border-b border-neutral-900 last:border-b-0">
+                            <p className="text-sm text-neutral-200 font-medium">{sub.appName}</p>
+                            <p className="text-xs text-rose-300 mt-1">
+                              Reminder reached. Billing on{" "}
+                              {new Date(sub.nextBillingDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                            </p>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
 
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-semibold text-sm cursor-pointer hover:shadow-lg transition-shadow">
-                {(localStorage.getItem("email") || "U").charAt(0).toUpperCase()}
+              <div className="w-8 h-8 rounded-full bg-linear-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-semibold text-sm cursor-pointer hover:shadow-lg transition-shadow">
+                {userInitial}
               </div>
 
               <motion.button
@@ -213,7 +273,7 @@ export default function Analytics() {
                   localStorage.removeItem("userId");
                   route.push("/");
                 }}
-                className="p-2 text-gray-400 hover:text-rose-400 hover:bg-gray-900/50 rounded-lg transition-colors duration-200"
+                className="p-2 text-neutral-400 hover:text-rose-400 hover:bg-neutral-900/50 rounded-lg transition-colors duration-200"
               >
                 <TbLogout className="w-5 h-5" />
               </motion.button>
@@ -238,6 +298,7 @@ export default function Analytics() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
                 className="bg-black border border-gray-700 rounded-xl p-6 hover:border-gray-600 transition-colors"
               >
                 <p className="text-gray-400 text-sm mb-3 font-medium">
@@ -253,7 +314,7 @@ export default function Analytics() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
+                transition={{ duration: 0.5 }}
                 className="bg-black border border-gray-700 rounded-xl p-6 hover:border-gray-600 transition-colors"
               >
                 <p className="text-gray-400 text-sm mb-3 font-medium">
@@ -275,7 +336,7 @@ export default function Analytics() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
+                transition={{ duration: 0.5 }}
                 className="bg-black border border-gray-700 rounded-xl p-6 hover:border-gray-600 transition-colors"
               >
                 <p className="text-gray-400 text-sm mb-3 font-medium">
@@ -302,7 +363,7 @@ export default function Analytics() {
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
+              transition={{ duration: 0.5 }}
               className="bg-black border border-gray-700 rounded-xl p-8 mb-8"
             >
               <div className="mb-8">
@@ -490,7 +551,6 @@ export default function Analytics() {
                         initial={{ r: 0, opacity: 0 }}
                         animate={{ r: 8, opacity: 1 }}
                         transition={{
-                          delay: 1.8 + index * 0.12,
                           duration: 0.5,
                         }}
                       />
@@ -504,7 +564,6 @@ export default function Analytics() {
                         initial={{ r: 0, opacity: 0 }}
                         animate={{ r: 6, opacity: 1 }}
                         transition={{
-                          delay: 1.8 + index * 0.12,
                           duration: 0.5,
                         }}
                       />
@@ -516,7 +575,6 @@ export default function Analytics() {
                         initial={{ r: 0, opacity: 0 }}
                         animate={{ r: 2.5, opacity: 1 }}
                         transition={{
-                          delay: 1.8 + index * 0.12,
                           duration: 0.5,
                         }}
                       />
@@ -524,7 +582,6 @@ export default function Analytics() {
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{
-                          delay: 2.8 + index * 0.12,
                           duration: 0.4,
                         }}
                       >
@@ -556,12 +613,13 @@ export default function Analytics() {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{
-                            delay: 3 + index * 0.12,
                             duration: 0.5,
                           }}
                         >
-                          {point.y < chartDataPoints[index + 1].y ? (
-                            <>
+                          
+                          {point.y < chartDataPoints[index + 1].y ?  (
+                
+                          <>
                               <line
                                 x1={point.x}
                                 y1={point.y + 18}
@@ -698,7 +756,7 @@ export default function Analytics() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
+              transition={{ duration: 0.5 }}
               className="bg-black border border-gray-700 rounded-xl overflow-hidden"
             >
               <div className="px-8 py-6 border-b border-gray-700 bg-black/30">
@@ -749,9 +807,9 @@ export default function Analytics() {
                       subscriptions.map((sub, index) => (
                         <motion.tr
                           key={sub.id}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: index * 0.05 }}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.4 }}
                           className="border-b border-gray-700 hover:bg-gray-800/40 transition-colors duration-200"
                         >
                           <td className="px-6 py-4">
@@ -820,7 +878,7 @@ export default function Analytics() {
           className="fixed inset-0 flex items-center justify-center z-50 p-4"
         >
           {selectedSubscription && (
-            <div className="bg-gray-900 border border-gray-800 rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-black border border-neutral-800 rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
               <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-cyan-600 p-6 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
@@ -847,7 +905,7 @@ export default function Analytics() {
               <div className="p-6 space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-gray-400 text-sm mb-1">Status</p>
+                    <p className="text-neutral-400 text-sm mb-1">Status</p>
                     <span
                       className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${
                         selectedSubscription?.status === "Active"
@@ -861,31 +919,31 @@ export default function Analytics() {
                     </span>
                   </div>
                   <div>
-                    <p className="text-gray-400 text-sm mb-1">Category</p>
-                    <p className="text-white font-medium">
+                    <p className="text-neutral-400 text-sm mb-1">Category</p>
+                    <p className="text-neutral-200 font-medium">
                       {selectedSubscription?.category ?? "N/A"}
                     </p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-gray-400 text-sm mb-1">Plan Type</p>
-                    <p className="text-white font-medium">
+                    <p className="text-neutral-400 text-sm mb-1">Plan Type</p>
+                    <p className="text-neutral-200 font-medium">
                       {selectedSubscription?.planType ?? "N/A"}
                     </p>
                   </div>
                   <div>
-                    <p className="text-gray-400 text-sm mb-1">Amount</p>
-                    <p className="text-white font-bold text-lg">
+                    <p className="text-neutral-400 text-sm mb-1">Amount</p>
+                    <p className="text-neutral-200 font-bold text-lg">
                       {selectedSubscription?.currency ?? ""}{" "}
                       {(selectedSubscription?.amount ?? 0).toFixed(2)}
                     </p>
                   </div>
                 </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 space-y-3">
+                <div className="bg-neutral-900/60 border border-neutral-800 rounded-lg p-4 space-y-3">
                   <div>
-                    <p className="text-gray-400 text-sm mb-1">Start Date</p>
-                    <p className="text-white">
+                    <p className="text-neutral-400 text-sm mb-1">Start Date</p>
+                    <p className="text-neutral-200">
                       {selectedSubscription?.startDate
                         ? new Date(
                             selectedSubscription.startDate,
@@ -894,10 +952,10 @@ export default function Analytics() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-gray-400 text-sm mb-1">
+                    <p className="text-neutral-400 text-sm mb-1">
                       Next Billing Date
                     </p>
-                    <p className="text-white font-semibold text-lg">
+                    <p className="text-neutral-200 font-semibold text-lg">
                       {selectedSubscription?.nextBillingDate
                         ? new Date(
                             selectedSubscription.nextBillingDate,
@@ -906,16 +964,15 @@ export default function Analytics() {
                     </p>
                   </div>
                 </div>
-                ]
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-gray-400 text-sm mb-1">Payment Method</p>
-                    <p className="text-white font-medium">
+                    <p className="text-neutral-400 text-sm mb-1">Payment Method</p>
+                    <p className="text-neutral-200 font-medium">
                       {selectedSubscription?.paymentMethod ?? "N/A"}
                     </p>
                   </div>
                   <div>
-                    <p className="text-gray-400 text-sm mb-1">Auto Renew</p>
+                    <p className="text-neutral-400 text-sm mb-1">Auto Renew</p>
                     <p
                       className={`font-medium ${
                         selectedSubscription?.autoRenew
@@ -938,7 +995,7 @@ export default function Analytics() {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 rounded-lg transition-colors"
+                    className="flex-1 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 font-medium py-2 rounded-lg transition-colors"
                     onClick={() => setSelectedSubscription(null)}
                   >
                     Close

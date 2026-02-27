@@ -24,7 +24,6 @@ export default function DashboardHeader() {
     "Payments",
     "Analytics",
     "Settings",
-    "Support",
   ];
 
   return (
@@ -56,16 +55,13 @@ export default function DashboardHeader() {
                       ? route.push("/dashboard/payments")
                       : null;
                     item === "Subscriptions"
-                      ? route.push("/dashboard/subscriptions")
+                      ? route.push("/dashboard")
                       : null;
                     item === "Analytics"
                       ? route.push("/dashboard/analytics")
                       : null;
                     item === "Settings"
                       ? route.push("/dashboard/settings")
-                      : null;
-                    item === "Support"
-                      ? route.push("/dashboard/support")
                       : null;
                   }}
                   className="px-3 py-2 text-sm text-neutral-400 hover:text-neutral-300 hover:bg-neutral-900/50 rounded-md transition-colors duration-200"

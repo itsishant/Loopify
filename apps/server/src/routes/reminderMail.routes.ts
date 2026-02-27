@@ -8,10 +8,20 @@ import { ThirtyDayMail } from "../controllers/mailer/thirtyDay.mailer.controller
 
 const router: Router = Router();
 
-router.route("/one-day-reminder/:id").post(middlewareAuthentication, OneDayMail);
-router.route("/three-day-reminder/:id").post(middlewareAuthentication, ThreeDayMail);
-router.route("/seven-day-reminder/:id").post(middlewareAuthentication, SevenDayMail);
-router.route("/fourteen-day-reminder/:id").post(middlewareAuthentication, FourteenDayMail);
-router.route("/thirty-day-reminder/:id").post(middlewareAuthentication, ThirtyDayMail);
+router
+  .route("/one-day-reminder/:id")
+  .post(middlewareAuthentication, OneDayMail);
+router
+  .route("/three-day-reminder/:id")
+  .post(middlewareAuthentication, ThreeDayMail);
+router
+  .route("/seven-day-reminder/:id")
+  .post(middlewareAuthentication, SevenDayMail);
+router
+  .route("/fourteen-day-reminder/:id")
+  .post(middlewareAuthentication, FourteenDayMail);
+router
+  .route("/thirty-day-reminder/:id")
+  .post(middlewareAuthentication, ThirtyDayMail);
 
 export default router;

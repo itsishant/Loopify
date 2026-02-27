@@ -12,7 +12,7 @@ export const TrustedPartner = () => {
           subscription management experience
         </p>
       </div>
-      <Marquee direction="right" speed={50}>
+      <Marquee direction="left" speed={50}>
         <div className="flex mt-32 justify-center space-x-38 items-center">
           <div>
             {" "}

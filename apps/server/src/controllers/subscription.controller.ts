@@ -1,4 +1,5 @@
 import { type Request, type Response } from "express";
+import mongoose from "mongoose";
 import type { ISubscription } from "../interface/subscription.interface.js";
 import { createSubscriptionData } from "../utils/subscription/createSubcription.utils.js";
 import { getSubscriptionId } from "../utils/subscription/getSubscription.utils.js";
@@ -6,102 +7,174 @@ import type { params } from "../types/subcription.type.js";
 import { update } from "../utils/subscription/updateSubcripton.utils.js";
 import { deletion } from "../utils/subscription/deleteSubcription.utils.js";
 
-// const createSubscription = async (
-//   req: Request<{}, {}, ISubscription>,
-//   res: Response,
-// ) => {
-//   try {
-//     const {
-//       appName,
-//       category,
-//       planType,
-//       amount,
-//       currency,
-//       paymentMethod,
-//       autoRenew,
-//       startDate,
-//       nextBillingDate,
-//       remindaerDaysBefore,
-//     } = req.body;
+interface Sub {
+  appName: string;
 
-//     if (
-//       !appName ||
-//       !category ||
-//       !planType ||
-//       !amount ||
-//       !currency ||
-//       !paymentMethod ||
-//       autoRenew === undefined ||
-//       !startDate ||
-//       !nextBillingDate ||
-//       remindaerDaysBefore === undefined
-//     ) {
-//       console.log("Invalid input: Missing required fields", req.body);
-//       return res.status(400).json({
-//         success: false,
-//         message: "Invalid input",
-//       });
-//     }
+  category:
+    | "Productivity"
+    | "Education"
+    | "Entertainment"
+    | "Utility"
+    | "Other";
+  planType: "Monthly" | "Yearly" | "Free" | "Trial";
+  amount: number;
+  currency: string;
+  paymentMethod: "Credit Card" | "Debit Card" | "PayPal" | "Upi" | "Other";
+  autoRenew: boolean;
+  startDate: Date;
+  nextBillingDate: Date;
+  reminderDaysBefore: 1 | 3 | 7 | 14 | 30;
+}
+``;
 
-//     const userId = (req as any).user?.id;
-//     if (!userId) {
-//       return res.status(401).json({
-//         success: false,
-//         message: "Unauthorized: User not authenticated",
-//       });
-//     }
+const createSubscriptionWeb = async (
+  req: Request<{}, {}, Sub>,
+  res: Response,
+) => {
+  try {
+    const {
+      appName,
+      category,
+      planType,
+      amount,
+      currency,
+      paymentMethod,
+      autoRenew,
+      startDate,
+      nextBillingDate,
+      reminderDaysBefore,
+    } = req.body;
 
-//     const transformedData = {
-//       userId,
-//       subscriptionDetails: {
-//         appName,
-//         category,
-//         planType,
-//       },
-//       billingDetails: {
-//         amount,
-//         currency,
-//         paymentMethod,
-//         autoRenew,
-//       },
-//       datesDetails: {
-//         startDate,
-//         nextBillingDate,
-//       },
-//       remindaerDaysBefore,
-//       status: "Active",
-//     };
+    const missingFields: string[] = [];
 
-//     const createdData = await createSubscriptionData(transformedData);
-//     console.log("created");
-//     if (!createdData) {
-//       console.log("Failed to create subscription");
-//       return res.status(400).json({
-//         success: false,
-//         message: "Unable to create Subscription",
-//       });
-//     }
+    if (!appName) missingFields.push("appName");
+    if (!category) missingFields.push("category");
+    if (!planType) missingFields.push("planType");
+    if (amount === undefined || amount === null || Number.isNaN(amount)) {
+      missingFields.push("amount");
+    }
+    if (!currency) missingFields.push("currency");
+    if (!paymentMethod) missingFields.push("paymentMethod");
+    if (autoRenew === undefined) missingFields.push("autoRenew");
+    if (!startDate) missingFields.push("startDate");
+    if (!nextBillingDate) missingFields.push("nextBillingDate");
+    if (
+      reminderDaysBefore === undefined ||
+      reminderDaysBefore === null ||
+      Number.isNaN(reminderDaysBefore)
+    ) {
+      missingFields.push("reminderDaysBefore");
+    }
 
-//     return res.status(200).json({
-//       success: true,
-//       message: "Subscription created successfully",
-//       data: createdData,
-//     });
-//   } catch (error) {
-//     console.log("Error while creating subscription: ", error);
-//     return res.status(500).json({
-//       success: false,
-//       message: "Internal Server Error",
-//     });
-//   }
-// };
+    if (missingFields.length > 0) {
+      console.log("Invalid input: Missing required fields", req.body);
+      return res.status(400).json({
+        success: false,
+        message: `Invalid input. Missing/invalid fields: ${missingFields.join(", ")}`,
+      });
+    }
+
+    if (![1, 3, 7, 14, 30].includes(Number(reminderDaysBefore))) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid reminderDaysBefore. Allowed values: 1, 3, 7, 14, 30",
+      });
+    }
+
+    if (
+      ![
+        "Productivity",
+        "Education",
+        "Entertainment",
+        "Utility",
+        "Other",
+      ].includes(category)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Invalid category. Allowed values: Productivity, Education, Entertainment, Utility, Other",
+      });
+    }
+
+    if (!["Monthly", "Yearly", "Free", "Trial"].includes(planType)) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Invalid planType. Allowed values: Monthly, Yearly, Free, Trial",
+      });
+    }
+
+    if (
+      !["Credit Card", "Debit Card", "PayPal", "Upi", "Other"].includes(
+        paymentMethod,
+      )
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Invalid paymentMethod. Allowed values: Credit Card, Debit Card, PayPal, Upi, Other",
+      });
+    }
+
+    const userId = (req as any).user?.id;
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized: User not authenticated",
+      });
+    }
+
+    const transformedData = {
+      userId: new mongoose.Types.ObjectId(userId),
+      subscriptionDetails: {
+        appName,
+        category,
+        planType,
+      },
+      billingDetails: {
+        amount,
+        currency,
+        paymentMethod,
+        autoRenew,
+      },
+      datesDetails: {
+        startDate,
+        nextBillingDate,
+      },
+      reminderDaysBefore,
+      status: "Active",
+    };
+
+    const createdData = await createSubscriptionData(transformedData);
+    console.log("created");
+    if (!createdData) {
+      console.log("Failed to create subscription");
+      return res.status(400).json({
+        success: false,
+        message: "Unable to create Subscription",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Subscription created successfully",
+      data: createdData,
+    });
+  } catch (error) {
+    console.log("Error while creating subscription: ", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
 
 const createSubscription = async (
   req: Request<{}, {}, ISubscription>,
   res: Response,
 ) => {
   try {
-
     const {
       subscriptionDetails,
       billingDetails,
@@ -282,6 +355,7 @@ const deleteSubscription = async (
 
 export {
   createSubscription,
+  createSubscriptionWeb,
   getSubscription,
   updateSubscription,
   deleteSubscription,

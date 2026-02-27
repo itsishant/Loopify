@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { createUser } from "../api/post/[...signupApi]/signup.api";
 
-export default function Signup() {
+function SignupContent() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -109,5 +109,13 @@ export default function Signup() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function Signup() {
+  return (
+    <Suspense>
+      <SignupContent />
+    </Suspense>
   );
 }
