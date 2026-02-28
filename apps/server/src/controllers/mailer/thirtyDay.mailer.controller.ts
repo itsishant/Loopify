@@ -10,26 +10,33 @@ export const ThirtyDayMail = async (
   res: Response,
 ) => {
   try {
-    const id = req.params.id;
+    const userId = req.params.id;
 
-    const reminderDays = await Subscription.find({
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const reminderTargetStart = new Date(today);
+    reminderTargetStart.setDate(reminderTargetStart.getDate() + 30);
+    const reminderTargetEnd = new Date(reminderTargetStart);
+    reminderTargetEnd.setDate(reminderTargetEnd.getDate() + 1);
+
+    const dueSubscriptions = await Subscription.find({
+      userId: userId,
       reminderDaysBefore: 30,
       status: "Active",
-      "subscriptionDetails.appName": { $exists: true },
+      "datesDetails.nextBillingDate": {
+        $gte: reminderTargetStart,
+        $lt: reminderTargetEnd,
+      },
     });
 
-    if (!reminderDays || reminderDays.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No subscriptions found with 30 day reminder",
+    if (!dueSubscriptions || dueSubscriptions.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "No subscriptions due for 30 day reminder today",
       });
     }
 
-    const name = reminderDays.map(
-      (subscription: any) => subscription.subscriptionDetails.appName,
-    );
-
-    const userMail = await Users.findById(id).select("email");
+    const userMail = await Users.findById(userId).select("email");
 
     if (!userMail || !userMail.email) {
       return res.status(404).json({
@@ -38,11 +45,18 @@ export const ThirtyDayMail = async (
       });
     }
 
-    reminderMail(userMail.email, "30", name[0]);
+    for (const sub of dueSubscriptions) {
+      await reminderMail(
+        userMail.email,
+        "30",
+        (sub as any).subscriptionDetails.appName,
+        (sub as any).datesDetails.nextBillingDate,
+      );
+    }
 
     return res.status(200).json({
       success: true,
-      message: "30 day reminder mail sent successfully",
+      message: `30 day reminder email(s) sent for ${dueSubscriptions.length} subscription(s)`,
     });
   } catch (error) {
     console.log(`Error while sending 30 day mail: ${error}`);

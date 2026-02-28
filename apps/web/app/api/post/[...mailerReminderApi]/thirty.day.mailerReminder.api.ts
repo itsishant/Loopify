@@ -20,3 +20,4 @@ export const thirtyDayMailerReminderApi = async (data: any) => {
     };
   }
 };
+

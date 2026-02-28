@@ -35,21 +35,7 @@ const createUser = async (req: Request<{}, {}, ISignupData>, res: Response) => {
 
     const genrotp = generateOTP(4);
 
-    // try {
-    //   await mailer(req.body.email, genrotp);
-    //   console.log("[Signup] OTP email sent successfully");
-    // } catch (mailError: any) {
-    //   console.error("[Signup] OTP email failed:", {
-    //     email: req.body.email,
-    //     error: mailError.message,
-    //     code: mailError.code,
-    //   });
-    //   return res.status(500).json({
-    //     success: false,
-    //     message: "Failed to send OTP email",
-    //     error: "Email service issue: " + mailError.message,
-    //   });
-    // }
+    await mailer(req.body.email, genrotp);
 
     req.body.otp = genrotp;
     const newUser = await userCreate(req);

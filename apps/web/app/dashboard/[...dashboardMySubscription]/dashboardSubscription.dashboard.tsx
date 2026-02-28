@@ -6,6 +6,11 @@ import { createSubscription } from "../../api/post/[...subscriptionApi]/subscrip
 import { GetSubscription } from "../../api/get/[...subscriptionApi]/subscription.api";
 import { DeleteSubscription } from "../../api/delete/[...subscriptionApi]/subscription.api";
 import { EditSubscription } from "../../api/put/[...subscriptionApi]/subscription.api";
+import { oneDayMailerReminderApi } from "../../api/post/[...mailerReminderApi]/one.day.mailerReminder.api";
+import { threeDayMailerReminderApi } from "../../api/post/[...mailerReminderApi]/three.day.mailerReminder.api";
+import { sevenDayMailerReminderApi } from "../../api/post/[...mailerReminderApi]/seven.day.mailerReminder.api";
+import { fourteenDayMailerReminderApi } from "../../api/post/[...mailerReminderApi]/fourteen.day.mailerReminder.api";
+import { thirtyDayMailerReminderApi } from "../../api/post/[...mailerReminderApi]/thirty.day.mailerReminder.api";
 
 export const DashboardSubscription = () => {
   const [formData, setFormData] = useState({
@@ -145,6 +150,25 @@ export const DashboardSubscription = () => {
       });
       setShowForm(false);
       localStorage.setItem("id", createdSubscription._id);
+
+      const reminderPayload = { _id: createdSubscription.userId };
+      const reminderDays = Number(formData.reminderDaysBefore);
+      try {
+        if (reminderDays === 1) {
+          await oneDayMailerReminderApi(reminderPayload);
+        } else if (reminderDays === 3) {
+          await threeDayMailerReminderApi(reminderPayload);
+        } else if (reminderDays === 7) {
+          await sevenDayMailerReminderApi(reminderPayload);
+        } else if (reminderDays === 14) {
+          await fourteenDayMailerReminderApi(reminderPayload);
+        } else if (reminderDays === 30) {
+          await thirtyDayMailerReminderApi(reminderPayload);
+        }
+        console.log(`[Reminder] ${reminderDays}-day reminder check triggered`);
+      } catch (reminderErr) {
+        console.warn("[Reminder] Failed to trigger reminder email:", reminderErr);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
       console.error("Error saving subscription:", err);
@@ -636,7 +660,6 @@ export const DashboardSubscription = () => {
             if (viewMode === "list") {
               return (
                 <div className="flex flex-col gap-2">
-                  {/* List header */}
                   <div className="hidden lg:grid grid-cols-[2fr_1fr_1fr_1fr_1fr_auto] gap-4 px-4 py-2 text-xs text-neutral-500 font-medium uppercase tracking-wider border-b border-neutral-800/60">
                     <span>Subscription</span>
                     <span>Amount</span>
@@ -651,7 +674,6 @@ export const DashboardSubscription = () => {
                       key={sub._id}
                       className="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr_auto] gap-4 items-center px-4 py-3.5 bg-neutral-900/30 border border-neutral-800/50 rounded-xl hover:border-neutral-700 hover:bg-neutral-900/50 transition-all duration-200 group"
                     >
-                      {/* Name + category */}
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-lg bg-neutral-800 border border-neutral-700/50 flex items-center justify-center flex-shrink-0">
                           <span className="text-neutral-300 font-semibold text-sm">
@@ -671,7 +693,6 @@ export const DashboardSubscription = () => {
                         </div>
                       </div>
 
-                      {/* Amount */}
                       <div className="flex flex-col">
                         <span className="text-neutral-200 font-bold text-sm">
                           {sub.billingDetails.currency === "USD"
@@ -688,12 +709,10 @@ export const DashboardSubscription = () => {
                         </span>
                       </div>
 
-                      {/* Payment method */}
                       <span className="text-neutral-300 text-sm">
                         {sub.billingDetails.paymentMethod}
                       </span>
 
-                      {/* Next billing */}
                       <div className="flex flex-col">
                         <span className="text-neutral-300 text-sm font-medium">
                           {new Date(
@@ -709,7 +728,6 @@ export const DashboardSubscription = () => {
                         </span>
                       </div>
 
-                      {/* Status */}
                       <span
                         className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium w-fit ${
                           sub.status === "Active"
@@ -724,7 +742,6 @@ export const DashboardSubscription = () => {
                         {sub.status}
                       </span>
 
-                      {/* Actions */}
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleEditClick(sub)}
@@ -747,7 +764,6 @@ export const DashboardSubscription = () => {
               );
             }
 
-            // Grid view
             return (
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
                 {filtered.map((sub) => (
