@@ -609,6 +609,7 @@ export default function Analytics() {
                         </text>
                       </motion.g>
                       {index < chartDataPoints.length - 1 && (
+                        // @ts-ignore
                         <motion.g
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -616,9 +617,7 @@ export default function Analytics() {
                             duration: 0.5,
                           }}
                         >
-                          
-                          {point.y < chartDataPoints[index + 1].y ?  (
-                
+                          {point.y < chartDataPoints[index + 1]!.y ?  (
                           <>
                               <line
                                 x1={point.x}
@@ -790,7 +789,9 @@ export default function Analytics() {
                       <tr>
                         <td colSpan={5} className="px-6 py-8 text-center">
                           <div className="flex justify-center items-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
+                            <svg className="animate-spin h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="3" strokeDasharray="60" strokeLinecap="round" />
+                            </svg>
                           </div>
                         </td>
                       </tr>
