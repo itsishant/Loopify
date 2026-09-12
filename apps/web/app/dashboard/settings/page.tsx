@@ -3,7 +3,16 @@
 import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { TbLogout, TbBell, TbCheck, TbLock, TbUser, TbShieldLock, TbMail, TbCalendar } from "react-icons/tb";
+import {
+  TbLogout,
+  TbBell,
+  TbCheck,
+  TbLock,
+  TbUser,
+  TbShieldLock,
+  TbMail,
+  TbCalendar,
+} from "react-icons/tb";
 import { GetSubscription } from "../../api/get/[...subscriptionApi]/subscription.api";
 import { BsToggleOn, BsToggleOff } from "react-icons/bs";
 
@@ -58,12 +67,7 @@ export default function Setting() {
     weeklyReport: true,
   });
 
-  const navItems = [
-    "Subscriptions",
-    "Payments",
-    "Analytics",
-    "Settings",
-  ];
+  const navItems = ["Subscriptions", "Payments", "Analytics", "Settings"];
 
   const toggleNotification = (key: keyof typeof notifications) => {
     setNotifications((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -87,12 +91,18 @@ export default function Setting() {
   };
 
   const reminderSubscriptions = subscriptions.filter((subscription) => {
-    const reminderDays = Number((subscription as any).reminderDaysBefore ?? subscription.remindaerDaysBefore ?? 0);
+    const reminderDays = Number(
+      (subscription as any).reminderDaysBefore ??
+        subscription.remindaerDaysBefore ??
+        0,
+    );
     if (!Number.isFinite(reminderDays) || reminderDays <= 0) {
       return false;
     }
 
-    const billingDate = normalizeDate(subscription.datesDetails.nextBillingDate);
+    const billingDate = normalizeDate(
+      subscription.datesDetails.nextBillingDate,
+    );
     const reminderDate = new Date(billingDate);
     reminderDate.setDate(billingDate.getDate() - reminderDays);
 
@@ -118,7 +128,9 @@ export default function Setting() {
           <div className="flex items-center justify-between gap-8">
             <div className="flex items-center gap-3 min-w-fit">
               <div className="w-8 h-8 rounded-lg bg-linear-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
-                <span className="text-black font-bold text-sm">{userInitial}</span>
+                <span className="text-black font-bold text-sm">
+                  {userInitial}
+                </span>
               </div>
               <div>
                 <h1 className="text-sm font-semibold text-white">
@@ -161,7 +173,9 @@ export default function Setting() {
                       : "text-neutral-400 hover:text-neutral-300 hover:bg-black/50"
                   }`}
                 >
-                  <TbBell className={`w-5 h-5 ${hasReminderNotifications ? "animate-pulse" : ""}`} />
+                  <TbBell
+                    className={`w-5 h-5 ${hasReminderNotifications ? "animate-pulse" : ""}`}
+                  />
                   {hasReminderNotifications && (
                     <span className="absolute top-1 right-1 flex h-2.5 w-2.5">
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-300/80" />
@@ -173,7 +187,9 @@ export default function Setting() {
                 {showNotifications && (
                   <div className="absolute right-0 mt-2 w-80 bg-neutral-950 border border-neutral-800 rounded-lg shadow-xl z-50">
                     <div className="px-4 py-3 border-b border-neutral-800">
-                      <p className="text-sm font-semibold text-white">Reminder Notifications</p>
+                      <p className="text-sm font-semibold text-white">
+                        Reminder Notifications
+                      </p>
                     </div>
 
                     <div className="max-h-72 overflow-y-auto">
@@ -237,7 +253,9 @@ export default function Setting() {
             transition={{ duration: 0.5 }}
             className="mb-12"
           >
-            <h1 className="text-4xl font-bold text-white mb-2">Settings & Account</h1>
+            <h1 className="text-4xl font-bold text-white mb-2">
+              Settings & Account
+            </h1>
             <p className="text-neutral-400 text-lg">
               Manage your account, security, and notification preferences
             </p>
@@ -272,7 +290,8 @@ export default function Setting() {
                       <span className="text-sm font-medium">{tab.label}</span>
                     </button>
                   );
-                })}"
+                })}
+                "
               </div>
             </motion.div>
 
@@ -287,17 +306,19 @@ export default function Setting() {
               {activeTab === "profile" && (
                 <div className="space-y-6">
                   {/* Profile Header Card */}
-                  <motion.div
-                    className="bg-black border border-neutral-400/20 rounded-xl p-8"
-                  >
+                  <motion.div className="bg-black border border-neutral-400/20 rounded-xl p-8">
                     <div className="flex items-start justify-between mb-6">
                       <div className="flex items-center gap-6">
                         <div className="w-24 h-24 rounded-xl bg-neutral-400 flex items-center justify-center text-4xl font-bold text-black shadow-lg">
                           {userInitial}
                         </div>
                         <div>
-                          <h2 className="text-3xl font-bold text-neutral-400 mb-2">Your Profile</h2>
-                          <p className="text-neutral-400 text-sm mb-3">Manage your public profile and identity</p>
+                          <h2 className="text-3xl font-bold text-neutral-400 mb-2">
+                            Your Profile
+                          </h2>
+                          <p className="text-neutral-400 text-sm mb-3">
+                            Manage your public profile and identity
+                          </p>
                         </div>
                       </div>
                       <div className="px-4 py-2 bg-neutral-400/10 border border-neutral-400/30 rounded-lg">
@@ -321,8 +342,12 @@ export default function Setting() {
                         <TbMail className="w-4 h-4" />
                         Email Address
                       </label>
-                      <p className="text-neutral-400 text-lg font-semibold">{userEmail || "Not set"}</p>
-                      <p className="text-neutral-500 text-xs mt-2">Your primary email for account recovery</p>
+                      <p className="text-neutral-400 text-lg font-semibold">
+                        {userEmail || "Not set"}
+                      </p>
+                      <p className="text-neutral-500 text-xs mt-2">
+                        Your primary email for account recovery
+                      </p>
                     </motion.div>
 
                     <motion.div
@@ -336,9 +361,15 @@ export default function Setting() {
                         Account Created
                       </label>
                       <p className="text-neutral-400 text-lg font-semibold">
-                        {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+                        {new Date().toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
                       </p>
-                      <p className="text-neutral-500 text-xs mt-2">Member for less than a day</p>
+                      <p className="text-neutral-500 text-xs mt-2">
+                        Member for less than a day
+                      </p>
                     </motion.div>
 
                     <motion.div
@@ -351,8 +382,12 @@ export default function Setting() {
                         <TbShieldLock className="w-4 h-4" />
                         Account Status
                       </label>
-                      <p className="text-neutral-400 text-lg font-semibold">Active</p>
-                      <p className="text-neutral-500 text-xs mt-2">Your account is in good standing</p>
+                      <p className="text-neutral-400 text-lg font-semibold">
+                        Active
+                      </p>
+                      <p className="text-neutral-500 text-xs mt-2">
+                        Your account is in good standing
+                      </p>
                     </motion.div>
 
                     <motion.div
@@ -365,8 +400,12 @@ export default function Setting() {
                         <TbLock className="w-4 h-4" />
                         Last Login
                       </label>
-                      <p className="text-neutral-400 text-lg font-semibold">Just now</p>
-                      <p className="text-neutral-500 text-xs mt-2">Current session</p>
+                      <p className="text-neutral-400 text-lg font-semibold">
+                        Just now
+                      </p>
+                      <p className="text-neutral-500 text-xs mt-2">
+                        Current session
+                      </p>
                     </motion.div>
                   </div>
                 </div>
@@ -375,14 +414,16 @@ export default function Setting() {
               {/* Account Info Tab */}
               {activeTab === "account" && (
                 <div className="space-y-6">
-                  <div
-                    className="bg-black border border-neutral-400/20 rounded-xl p-8"
-                  >
-                    <h3 className="text-2xl font-bold text-neutral-400 mb-6">Account Information</h3>
-                    
+                  <div className="bg-black border border-neutral-400/20 rounded-xl p-8">
+                    <h3 className="text-2xl font-bold text-neutral-400 mb-6">
+                      Account Information
+                    </h3>
+
                     <div className="space-y-6">
                       <div>
-                        <label className="block text-neutral-400 text-sm font-medium mb-3">Email Address</label>
+                        <label className="block text-neutral-400 text-sm font-medium mb-3">
+                          Email Address
+                        </label>
                         <div className="flex items-center gap-3">
                           <input
                             type="email"
@@ -404,31 +445,57 @@ export default function Setting() {
               {/* Notifications Tab */}
               {activeTab === "notifications" && (
                 <div className="space-y-6">
-                  <div
-                    className="bg-black border border-neutral-400/20 rounded-xl p-8"
-                  >
-                    <h3 className="text-2xl font-bold text-neutral-400 mb-6">Notification Preferences</h3>
-                    
+                  <div className="bg-black border border-neutral-400/20 rounded-xl p-8">
+                    <h3 className="text-2xl font-bold text-neutral-400 mb-6">
+                      Notification Preferences
+                    </h3>
+
                     <div className="space-y-4">
                       {[
-                        { key: "emailReminders", title: "Billing Reminders", desc: "Get notified before your subscriptions renew" },
-                        { key: "billingAlerts", title: "Billing Alerts", desc: "Receive alerts about payment issues" },
-                        { key: "newOffers", title: "Special Offers", desc: "Get notified about deals and exclusive offers" },
-                        { key: "weeklyReport", title: "Weekly Report", desc: "Receive a weekly summary of your subscriptions" },
+                        {
+                          key: "emailReminders",
+                          title: "Billing Reminders",
+                          desc: "Get notified before your subscriptions renew",
+                        },
+                        {
+                          key: "billingAlerts",
+                          title: "Billing Alerts",
+                          desc: "Receive alerts about payment issues",
+                        },
+                        {
+                          key: "newOffers",
+                          title: "Special Offers",
+                          desc: "Get notified about deals and exclusive offers",
+                        },
+                        {
+                          key: "weeklyReport",
+                          title: "Weekly Report",
+                          desc: "Receive a weekly summary of your subscriptions",
+                        },
                       ].map((notif) => (
                         <div
                           key={notif.key}
                           className="flex items-center justify-between p-4 bg-black border border-neutral-400/20 rounded-lg hover:border-neutral-400/40 transition-colors"
                         >
                           <div>
-                            <p className="text-neutral-400 font-medium">{notif.title}</p>
-                            <p className="text-neutral-500 text-sm">{notif.desc}</p>
+                            <p className="text-neutral-400 font-medium">
+                              {notif.title}
+                            </p>
+                            <p className="text-neutral-500 text-sm">
+                              {notif.desc}
+                            </p>
                           </div>
                           <button
-                            onClick={() => toggleNotification(notif.key as keyof typeof notifications)}
+                            onClick={() =>
+                              toggleNotification(
+                                notif.key as keyof typeof notifications,
+                              )
+                            }
                             className="text-2xl transition-colors"
                           >
-                            {notifications[notif.key as keyof typeof notifications] ? (
+                            {notifications[
+                              notif.key as keyof typeof notifications
+                            ] ? (
                               <BsToggleOn className="text-neutral-400" />
                             ) : (
                               <BsToggleOff className="text-neutral-600" />

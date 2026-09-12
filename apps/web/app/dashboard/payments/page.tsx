@@ -56,15 +56,12 @@ export default function Payments() {
   const [userInitial, setUserInitial] = useState("U");
 
   useEffect(() => {
-    setUserInitial((localStorage.getItem("email") || "U").charAt(0).toUpperCase());
+    setUserInitial(
+      (localStorage.getItem("email") || "U").charAt(0).toUpperCase(),
+    );
   }, []);
 
-  const navItems = [
-    "Subscriptions",
-    "Payments",
-    "Analytics",
-    "Settings",
-  ];
+  const navItems = ["Subscriptions", "Payments", "Analytics", "Settings"];
 
   useEffect(() => {
     const fetchSubscriptions = async () => {
@@ -182,7 +179,9 @@ export default function Payments() {
                       : "text-neutral-400 hover:text-neutral-300 hover:bg-neutral-900/50"
                   }`}
                 >
-                  <TbBell className={`w-5 h-5 ${hasReminderNotifications ? "animate-pulse" : ""}`} />
+                  <TbBell
+                    className={`w-5 h-5 ${hasReminderNotifications ? "animate-pulse" : ""}`}
+                  />
                   {hasReminderNotifications && (
                     <span className="absolute top-1 right-1 flex h-2.5 w-2.5">
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-300/80" />
@@ -193,18 +192,34 @@ export default function Payments() {
                 {showNotifications && (
                   <div className="absolute right-0 mt-2 w-80 bg-neutral-950 border border-neutral-800 rounded-lg shadow-xl z-50">
                     <div className="px-4 py-3 border-b border-neutral-800">
-                      <p className="text-sm font-semibold text-white">Reminder Notifications</p>
+                      <p className="text-sm font-semibold text-white">
+                        Reminder Notifications
+                      </p>
                     </div>
                     <div className="max-h-72 overflow-y-auto">
                       {reminderSubscriptions.length === 0 ? (
-                        <p className="px-4 py-4 text-sm text-neutral-400">No reminders due today.</p>
+                        <p className="px-4 py-4 text-sm text-neutral-400">
+                          No reminders due today.
+                        </p>
                       ) : (
                         reminderSubscriptions.map((sub) => (
-                          <div key={sub.id} className="px-4 py-3 border-b border-neutral-900 last:border-b-0">
-                            <p className="text-sm text-neutral-200 font-medium">{sub.appName}</p>
+                          <div
+                            key={sub.id}
+                            className="px-4 py-3 border-b border-neutral-900 last:border-b-0"
+                          >
+                            <p className="text-sm text-neutral-200 font-medium">
+                              {sub.appName}
+                            </p>
                             <p className="text-xs text-rose-300 mt-1">
                               Reminder reached. Billing on{" "}
-                              {new Date(sub.nextBillingDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                              {new Date(sub.nextBillingDate).toLocaleDateString(
+                                "en-US",
+                                {
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                                },
+                              )}
                             </p>
                           </div>
                         ))
@@ -534,7 +549,9 @@ export default function Payments() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-neutral-400 text-sm mb-1">Payment Method</p>
+                    <p className="text-neutral-400 text-sm mb-1">
+                      Payment Method
+                    </p>
                     <p className="text-neutral-200 font-medium">
                       {selectedSubscription?.paymentMethod ?? "N/A"}
                     </p>

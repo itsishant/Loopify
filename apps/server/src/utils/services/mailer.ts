@@ -113,7 +113,11 @@ const mailer = async (toMail: string, otp: string) => {
 </html>`,
     };
 
-    console.log("[Mailer] Mail options:", { from: mailOptions.from, to: mailOptions.to, subject: mailOptions.subject });
+    console.log("[Mailer] Mail options:", {
+      from: mailOptions.from,
+      to: mailOptions.to,
+      subject: mailOptions.subject,
+    });
     console.log("[Mailer] Attempting to send email...");
 
     const info = await transporter.sendMail(mailOptions);

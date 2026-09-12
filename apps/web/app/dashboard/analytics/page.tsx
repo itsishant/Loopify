@@ -56,7 +56,9 @@ export default function Analytics() {
   const [userInitial, setUserInitial] = useState("U");
 
   useEffect(() => {
-    setUserInitial((localStorage.getItem("email") || "U").charAt(0).toUpperCase());
+    setUserInitial(
+      (localStorage.getItem("email") || "U").charAt(0).toUpperCase(),
+    );
   }, []);
 
   const generateChartData = (subs: Subscription[]) => {
@@ -104,17 +106,12 @@ export default function Analytics() {
     const pathPoints = points
       .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`)
       .join(" ");
-      //@ts-ignore
+    //@ts-ignore
     const lastX = points[points.length - 1].x;
     return `${pathPoints} L ${lastX} 290 L 110 290 Z`;
   };
 
-  const navItems = [
-    "Subscriptions",
-    "Payments",
-    "Analytics",
-    "Settings",
-  ];
+  const navItems = ["Subscriptions", "Payments", "Analytics", "Settings"];
 
   useEffect(() => {
     const fetchSubscriptions = async () => {
@@ -230,7 +227,9 @@ export default function Analytics() {
                       : "text-neutral-400 hover:text-neutral-300 hover:bg-neutral-900/50"
                   }`}
                 >
-                  <TbBell className={`w-5 h-5 ${hasReminderNotifications ? "animate-pulse" : ""}`} />
+                  <TbBell
+                    className={`w-5 h-5 ${hasReminderNotifications ? "animate-pulse" : ""}`}
+                  />
                   {hasReminderNotifications && (
                     <span className="absolute top-1 right-1 flex h-2.5 w-2.5">
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-300/80" />
@@ -241,18 +240,34 @@ export default function Analytics() {
                 {showNotifications && (
                   <div className="absolute right-0 mt-2 w-80 bg-neutral-950 border border-neutral-800 rounded-lg shadow-xl z-50">
                     <div className="px-4 py-3 border-b border-neutral-800">
-                      <p className="text-sm font-semibold text-white">Reminder Notifications</p>
+                      <p className="text-sm font-semibold text-white">
+                        Reminder Notifications
+                      </p>
                     </div>
                     <div className="max-h-72 overflow-y-auto">
                       {reminderSubscriptions.length === 0 ? (
-                        <p className="px-4 py-4 text-sm text-neutral-400">No reminders due today.</p>
+                        <p className="px-4 py-4 text-sm text-neutral-400">
+                          No reminders due today.
+                        </p>
                       ) : (
                         reminderSubscriptions.map((sub) => (
-                          <div key={sub.id} className="px-4 py-3 border-b border-neutral-900 last:border-b-0">
-                            <p className="text-sm text-neutral-200 font-medium">{sub.appName}</p>
+                          <div
+                            key={sub.id}
+                            className="px-4 py-3 border-b border-neutral-900 last:border-b-0"
+                          >
+                            <p className="text-sm text-neutral-200 font-medium">
+                              {sub.appName}
+                            </p>
                             <p className="text-xs text-rose-300 mt-1">
                               Reminder reached. Billing on{" "}
-                              {new Date(sub.nextBillingDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                              {new Date(sub.nextBillingDate).toLocaleDateString(
+                                "en-US",
+                                {
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                                },
+                              )}
                             </p>
                           </div>
                         ))
@@ -617,8 +632,8 @@ export default function Analytics() {
                             duration: 0.5,
                           }}
                         >
-                          {point.y < chartDataPoints[index + 1]!.y ?  (
-                          <>
+                          {point.y < chartDataPoints[index + 1]!.y ? (
+                            <>
                               <line
                                 x1={point.x}
                                 y1={point.y + 18}
@@ -789,8 +804,21 @@ export default function Analytics() {
                       <tr>
                         <td colSpan={5} className="px-6 py-8 text-center">
                           <div className="flex justify-center items-center">
-                            <svg className="animate-spin h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                              <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="3" strokeDasharray="60" strokeLinecap="round" />
+                            <svg
+                              className="animate-spin h-8 w-8"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="white"
+                                strokeWidth="3"
+                                strokeDasharray="60"
+                                strokeLinecap="round"
+                              />
                             </svg>
                           </div>
                         </td>
@@ -967,7 +995,9 @@ export default function Analytics() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-neutral-400 text-sm mb-1">Payment Method</p>
+                    <p className="text-neutral-400 text-sm mb-1">
+                      Payment Method
+                    </p>
                     <p className="text-neutral-200 font-medium">
                       {selectedSubscription?.paymentMethod ?? "N/A"}
                     </p>

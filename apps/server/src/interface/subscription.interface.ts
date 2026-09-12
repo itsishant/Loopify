@@ -6,11 +6,7 @@ export interface ISubscription {
   subscriptionDetails: {
     appName: string;
     category:
-      | "Productivity"
-      | "Education"
-      | "Entertainment"
-      | "Utility"
-      | "Other";
+      "Productivity" | "Education" | "Entertainment" | "Utility" | "Other";
     planType: "Monthly" | "Yearly" | "Free" | "Trial";
   };
   billingDetails: {

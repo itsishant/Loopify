@@ -19,12 +19,7 @@ export default function DashboardHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [viewMode, setViewMode] = useState("grid");
 
-  const navItems = [
-    "Subscriptions",
-    "Payments",
-    "Analytics",
-    "Settings",
-  ];
+  const navItems = ["Subscriptions", "Payments", "Analytics", "Settings"];
 
   return (
     <div className="min-h-screen bg-black">
@@ -54,9 +49,7 @@ export default function DashboardHeader() {
                     item === "Payments"
                       ? route.push("/dashboard/payments")
                       : null;
-                    item === "Subscriptions"
-                      ? route.push("/dashboard")
-                      : null;
+                    item === "Subscriptions" ? route.push("/dashboard") : null;
                     item === "Analytics"
                       ? route.push("/dashboard/analytics")
                       : null;

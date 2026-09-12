@@ -11,11 +11,7 @@ interface Sub {
   appName: string;
 
   category:
-    | "Productivity"
-    | "Education"
-    | "Entertainment"
-    | "Utility"
-    | "Other";
+    "Productivity" | "Education" | "Entertainment" | "Utility" | "Other";
   planType: "Monthly" | "Yearly" | "Free" | "Trial";
   amount: number;
   currency: string;

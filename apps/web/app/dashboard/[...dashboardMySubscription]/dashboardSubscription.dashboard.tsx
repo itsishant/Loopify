@@ -167,7 +167,10 @@ export const DashboardSubscription = () => {
         }
         console.log(`[Reminder] ${reminderDays}-day reminder check triggered`);
       } catch (reminderErr) {
-        console.warn("[Reminder] Failed to trigger reminder email:", reminderErr);
+        console.warn(
+          "[Reminder] Failed to trigger reminder email:",
+          reminderErr,
+        );
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");

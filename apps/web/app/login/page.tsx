@@ -47,7 +47,9 @@ export default function Signin() {
         localStorage.setItem("userId", result?.userId || "");
         route.push("/dashboard");
       } else {
-        setError(result?.message || "Incorrect email or password. Please try again.");
+        setError(
+          result?.message || "Incorrect email or password. Please try again.",
+        );
       }
     } catch {
       setError("Something went wrong. Please try again.");
@@ -92,7 +94,14 @@ export default function Signin() {
           disabled={loading}
           className="mt-6 w-full flex justify-center items-center gap-2 p-3 rounded bg-blue-800 text-white font-semibold hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors cursor-pointer"
         >
-          {loading ? <><Spinner /><span>Logging in...</span></> : "Log in"}
+          {loading ? (
+            <>
+              <Spinner />
+              <span>Logging in...</span>
+            </>
+          ) : (
+            "Log in"
+          )}
         </button>
 
         <div className="flex justify-center items-center mt-6">

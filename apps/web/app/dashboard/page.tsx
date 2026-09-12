@@ -60,15 +60,12 @@ export default function DashboardPage() {
   const [userInitial, setUserInitial] = useState("U");
 
   useEffect(() => {
-    setUserInitial((localStorage.getItem("email") || "U").charAt(0).toUpperCase());
+    setUserInitial(
+      (localStorage.getItem("email") || "U").charAt(0).toUpperCase(),
+    );
   }, []);
 
-  const navItems = [
-    "Subscriptions",
-    "Payments",
-    "Analytics",
-    "Settings",
-  ];
+  const navItems = ["Subscriptions", "Payments", "Analytics", "Settings"];
 
   useEffect(() => {
     const fetchSubscriptions = async () => {
@@ -113,9 +110,7 @@ export default function DashboardPage() {
                     item === "Payments"
                       ? route.push("/dashboard/payments")
                       : null;
-                    item === "Subscriptions"
-                      ? route.push("/dashboard")
-                      : null;
+                    item === "Subscriptions" ? route.push("/dashboard") : null;
                     item === "Analytics"
                       ? route.push("/dashboard/analytics")
                       : null;
@@ -155,7 +150,9 @@ export default function DashboardPage() {
                 {showNotifications && (
                   <div className="absolute right-0 mt-2 w-80 bg-neutral-950 border border-neutral-800 rounded-lg shadow-xl z-50">
                     <div className="px-4 py-3 border-b border-neutral-800">
-                      <p className="text-sm font-semibold text-white">Reminder Notifications</p>
+                      <p className="text-sm font-semibold text-white">
+                        Reminder Notifications
+                      </p>
                     </div>
 
                     <div className="max-h-72 overflow-y-auto">

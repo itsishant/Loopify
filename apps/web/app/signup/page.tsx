@@ -61,7 +61,9 @@ function SignupContent() {
         localStorage.setItem("email", email);
         route.push("/signup/otp");
       } else {
-        setError(result?.message || "Failed to create account. Please try again.");
+        setError(
+          result?.message || "Failed to create account. Please try again.",
+        );
       }
     } catch {
       setError("Something went wrong. Please try again.");
@@ -106,7 +108,14 @@ function SignupContent() {
           disabled={loading}
           className="mt-6 w-full flex justify-center items-center gap-2 p-3 rounded bg-blue-800 text-white font-semibold hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors cursor-pointer"
         >
-          {loading ? <><Spinner /><span>Creating account...</span></> : "Create Account"}
+          {loading ? (
+            <>
+              <Spinner />
+              <span>Creating account...</span>
+            </>
+          ) : (
+            "Create Account"
+          )}
         </button>
 
         <div className="flex justify-center items-center mt-5">
@@ -119,8 +128,6 @@ function SignupContent() {
             </Link>
           </span>
         </div>
-
-      
       </div>
     </div>
   );
