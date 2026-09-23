@@ -13,7 +13,8 @@ Loopify is a sophisticated monorepo-based application that helps users manage th
 ### **Monorepo & Build System**
 
 - **Turborepo** ^2.6.1 - Monorepo management and task orchestration
-- **PNPM** ^10.19.0 - Fast, disk-space-efficient package manager
+- **PNPM** ^10.19.0 - Fast, disk-space-efficien
+- t package manager
 - **TypeScript** 5.9+ - Full static type checking across the project
 
 ### **Backend (Server)**
