@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { verifyOTP } from "../../api/post/[...otpApi]/opt.api";
+import { LogoMark } from "../../components/Logo";
 
 export default function Otp() {
   const [otp, setOtp] = useState(["", "", "", ""]);
@@ -69,18 +70,20 @@ export default function Otp() {
   };
 
   return (
-    <div className="bg-black flex justify-center items-center min-h-screen">
-      <div className="bg-gray-900 p-8 shadow-lg rounded-lg">
-        <div className="flex flex-col justify-center items-center space-y-4">
-          <h1 className="text-neutral-200 text-center text-5xl font-medium">
+    <div className="relative bg-black flex justify-center items-center min-h-screen px-4 overflow-hidden">
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-white/[0.06] blur-3xl" />
+      <div className="relative bg-neutral-950 w-full max-w-md p-8 rounded-2xl border border-white/10 shadow-[0_0_60px_-15px_rgba(255,255,255,0.08)]">
+        <div className="flex flex-col justify-center items-center space-y-3">
+          <LogoMark className="size-12 mb-3" />
+          <h1 className="text-white text-center text-4xl tracking-tighter font-semibold">
             OTP Verification
           </h1>
 
-          <p className="font-poppins text-sm font-medium text-neutral-400">
+          <p className="text-sm text-neutral-500">
             4-digit code sent to your email address
           </p>
         </div>
-        <div className="flex gap-4 justify-center mt-14 mb-4">
+        <div className="flex gap-3 justify-center mt-10 mb-4">
           {otp.map((_, index) => (
             <input
               key={index}
@@ -93,7 +96,7 @@ export default function Otp() {
               maxLength={1}
               onChange={(e) => handleChange(e.target.value, index)}
               onKeyDown={(e) => handleKeyDown(index, e)}
-              className="bg-gray-800 text-white border-2 border-gray-700 focus:outline-none focus:border-blue-500 p-4 w-14 h-14 text-center text-2xl font-bold rounded"
+              className="bg-black text-white border border-white/10 focus:outline-none focus:border-white/60 focus:ring-4 focus:ring-white/5 p-4 w-16 h-16 text-center text-2xl font-semibold rounded-xl transition-colors"
             />
           ))}
         </div>
@@ -113,7 +116,7 @@ export default function Otp() {
         <button
           onClick={handleVerify}
           disabled={loading}
-          className="mt-8 w-full cursor-pointer p-3 rounded bg-blue-800 text-white font-semibold hover:bg-blue-700 disabled:opacity-50"
+          className="mt-8 w-full cursor-pointer p-3 rounded-xl bg-white text-black font-semibold hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {loading ? "Verifying..." : "Verify"}
         </button>
