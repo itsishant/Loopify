@@ -7,7 +7,9 @@ const dbConfig: IDb = {
   MONGODB_URI: process.env.MONGODB_URI,
 };
 
-const connectToDatabase = async () => {
+const RETRY_DELAY_MS = 5000;
+
+const connectToDatabase = async (): Promise<void> => {
   try {
     if (!dbConfig.MONGODB_URI) {
       return console.log("MONGODB_URI is not defined in environment variables");
@@ -16,7 +18,10 @@ const connectToDatabase = async () => {
     await mongoose.connect(dbConfig.MONGODB_URI);
     console.log("Connect to database successfully");
   } catch (error) {
+    // Without a connection every query hangs for 10s and fails, so keep retrying
     console.log("Error connecting to database:", error);
+    console.log(`Retrying database connection in ${RETRY_DELAY_MS / 1000}s...`);
+    setTimeout(connectToDatabase, RETRY_DELAY_MS);
   }
 };
 

@@ -7,11 +7,9 @@ import { passwordHash } from "../utils/password/bcrypt.password.utils.js";
 import { checkUserExist } from "../utils/signup/userEmilCheck.utils.js";
 import { getInfo } from "../utils/signup/getUsers.utils.js";
 import { deleteUserFunction } from "../utils/signup/deleteUser.utils.js";
-import { mailer } from "../utils/services/mailer.js";
-import { generateOTP } from "../utils/otp/otpGenerator.utils.js";
 const createUser = async (req: Request<{}, {}, ISignupData>, res: Response) => {
   try {
-    const { email, password, otp } = req.body;
+    const { email, password } = req.body;
     const body = signupZod.safeParse(req.body);
 
     if (!body.success || !email || !password) {
@@ -33,11 +31,6 @@ const createUser = async (req: Request<{}, {}, ISignupData>, res: Response) => {
       });
     }
 
-    const genrotp = generateOTP(4);
-
-    await mailer(req.body.email, genrotp);
-
-    req.body.otp = genrotp;
     const newUser = await userCreate(req);
 
     if (!newUser) {
