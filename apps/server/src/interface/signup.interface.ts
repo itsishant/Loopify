@@ -4,5 +4,4 @@ export interface ISignupData {
   userId?: string;
   id?: string;
   googleId?: string | null;
-  otp?: string | null;
 }

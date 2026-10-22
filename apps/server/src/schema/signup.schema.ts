@@ -15,12 +15,6 @@ const signupSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Users",
   },
-
-  otp: {
-    type: String,
-    required: false,
-    default: null,
-  },
 });
 
 export { signupSchema };

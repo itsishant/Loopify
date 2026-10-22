@@ -60,7 +60,7 @@ function SignupContent() {
         localStorage.setItem("userId", result.data?._id || result.data?.id);
         localStorage.setItem("token", result.token || "");
         localStorage.setItem("email", email);
-        route.push("/signup/otp");
+        route.push("/dashboard");
       } else {
         setError(
           result?.message || "Failed to create account. Please try again.",
