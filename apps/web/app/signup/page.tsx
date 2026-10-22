@@ -5,6 +5,7 @@ import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { createUser } from "../api/post/[...signupApi]/signup.api";
+import { LogoMark } from "../components/Logo";
 
 function Spinner() {
   return (
@@ -18,7 +19,7 @@ function Spinner() {
         cx="12"
         cy="12"
         r="10"
-        stroke="white"
+        stroke="currentColor"
         strokeWidth="3"
         strokeDasharray="60"
         strokeLinecap="round"
@@ -73,9 +74,13 @@ function SignupContent() {
   };
 
   return (
-    <div className="bg-black flex justify-center items-center min-h-screen px-4">
-      <div className="bg-gray-900 w-full max-w-md p-8 shadow-lg rounded-lg">
-        <div className="text-white flex justify-center items-center font-sans text-4xl sm:text-5xl tracking-tight font-semibold">
+    <div className="relative bg-black flex justify-center items-center min-h-screen px-4 overflow-hidden">
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-white/[0.06] blur-3xl" />
+      <div className="relative bg-neutral-950 w-full max-w-md p-8 rounded-2xl border border-white/10 shadow-[0_0_60px_-15px_rgba(255,255,255,0.08)]">
+        <Link href="/" className="flex justify-center mb-6" aria-label="Loopify home">
+          <LogoMark className="size-12" />
+        </Link>
+        <div className="text-white flex justify-center items-center font-sans text-4xl tracking-tighter font-semibold">
           Sign up
         </div>
 
@@ -85,7 +90,7 @@ function SignupContent() {
             onChange={(e) => setEmail(e.target.value)}
             value={email}
             type="text"
-            className="mt-4 w-full p-3 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
+            className="mt-4 w-full px-4 py-3 rounded-xl bg-black text-white placeholder:text-neutral-600 border border-white/10 focus:outline-none focus:border-white/60 focus:ring-4 focus:ring-white/5 transition-colors"
           />
           <input
             placeholder="Password"
@@ -93,7 +98,7 @@ function SignupContent() {
             value={password}
             type="password"
             onKeyDown={(e) => e.key === "Enter" && handleSignup()}
-            className="mt-4 w-full p-3 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
+            className="mt-4 w-full px-4 py-3 rounded-xl bg-black text-white placeholder:text-neutral-600 border border-white/10 focus:outline-none focus:border-white/60 focus:ring-4 focus:ring-white/5 transition-colors"
           />
         </div>
 
@@ -106,7 +111,7 @@ function SignupContent() {
         <button
           onClick={handleSignup}
           disabled={loading}
-          className="mt-6 w-full flex justify-center items-center gap-2 p-3 rounded bg-blue-800 text-white font-semibold hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors cursor-pointer"
+          className="mt-6 w-full flex justify-center items-center gap-2 p-3 rounded-xl bg-white text-black font-semibold hover:bg-neutral-200 disabled:opacity-60 disabled:cursor-not-allowed transition-colors cursor-pointer"
         >
           {loading ? (
             <>
@@ -122,7 +127,7 @@ function SignupContent() {
           <span className="text-neutral-400 text-sm">
             Already have an account?{" "}
             <Link href="/login">
-              <span className="text-blue-300 cursor-pointer hover:text-blue-400">
+              <span className="text-white font-medium underline decoration-white/30 underline-offset-4 cursor-pointer hover:decoration-white">
                 Log in
               </span>
             </Link>
